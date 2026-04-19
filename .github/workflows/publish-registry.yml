@@ -1,0 +1,45 @@
+name: Publish to MCP Registry
+
+# Runs mcp-publisher against the Official MCP Registry whenever server.json
+# changes on main, or on manual dispatch. Uses GitHub OIDC to claim the
+# io.github.aturio/* namespace without any stored secrets.
+#
+# Prerequisites (one-off):
+#   1. After the initial manual `mcp-publisher publish` completes, this
+#      workflow takes over future releases.
+#   2. Bump `version` in server.json before merging — the registry rejects
+#      re-publish of an existing version.
+
+on:
+  push:
+    branches: [main]
+    paths: [server.json]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" \
+            | tar xz mcp-publisher
+          sudo mv mcp-publisher /usr/local/bin/
+
+      - name: Authenticate via GitHub OIDC
+        run: mcp-publisher login github-oidc
+
+      - name: Publish
+        run: mcp-publisher publish
+
+      - name: Verify
+        run: |
+          sleep 5
+          curl -sSf "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.aturio/pasal-id-mcp" \
+            | jq -e '.servers[0].name == "io.github.aturio/pasal-id-mcp"'
