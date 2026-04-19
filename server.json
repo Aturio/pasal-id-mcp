@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.aturio/pasal-id-mcp",
+  "title": "Pasal.id — Indonesian Law",
+  "description": "Authenticated MCP access to Indonesian legislation with structured data and real citations. Search 40,000+ Indonesian regulations (UU, PP, Perpres, PERMEN, PERDA), retrieve specific articles (pasal), and check legal status + amendment history.",
+  "version": "1.1.0",
+  "repository": {
+    "url": "https://github.com/Aturio/pasal-id-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://pasal.id",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.pasal.id/mcp"
+    }
+  ]
+}
