@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.aturio/pasal-id-mcp",
+  "name": "io.github.Aturio/pasal-id-mcp",
   "title": "Pasal.id — Indonesian Law",
   "description": "MCP server for Indonesian legislation — search 40,000+ regulations with citation-ready answers.",
   "version": "1.1.0",
