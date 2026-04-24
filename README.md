@@ -12,7 +12,7 @@
 
 Indonesian law is scattered across dozens of government portals, each with its own PDF quirks and status ambiguities. Most LLM answers about Indonesian regulations are hallucinated — the training data is thin, and the live web isn't indexed for precise legal retrieval.
 
-Pasal.id consolidates 40,000+ regulations into structured data (pasal-level granularity, full amendment history, legal-status provenance) and exposes it to AI assistants via MCP. Every answer an LLM gives using this server can be grounded in a specific article from an authoritative source.
+Pasal.id consolidates 40,000+ regulations into structured data (pasal-level granularity, whole-law hierarchy, preamble sections, amendment history, and legal-status provenance) and exposes it to AI assistants via MCP. Every answer an LLM gives using this server can be grounded in a specific article, regulation part, and authoritative source.
 
 ## Connect
 
@@ -65,14 +65,19 @@ Settings → Developer Tools → Add MCP Server → paste `https://mcp.pasal.id/
 
 ## Tools
 
-The server exposes four tools to AI assistants:
+The server exposes nine intent-level tools to AI assistants:
 
-| Tool              | Purpose                                                                  |
-|-------------------|--------------------------------------------------------------------------|
-| `search_laws`     | Full-text search across all regulations. Filters by type, year, status. |
-| `get_pasal`       | Retrieve a specific article (pasal) from a specific law.                |
-| `get_law_status`  | Check whether a regulation is in force, amended, or revoked.            |
-| `list_laws`       | Browse regulations with type / year / status filters.                   |
+| Tool | Purpose |
+|---|---|
+| `search_laws` | Search-first entry point for Indonesian regulation topics, keywords, and citation-like references. |
+| `get_pasal` | Retrieve a specific Pasal with ayat context, source URL, PDF provenance, and correction metadata. |
+| `get_law_status` | Check whether a regulation is in force, amended, or revoked, including normalized relationship codes. |
+| `get_law_overview` | Read canonical metadata, source/provenance, verification, freshness, and compact outline counts. |
+| `get_law_structure` | Inspect the hierarchy of Bab, Bagian, Pasal, Pembukaan, Penutup, Penjelasan, and Lampiran without loading the whole law. |
+| `get_law_part` | Fetch a bounded part by `node_id`, selector, or special part such as `menimbang`, `mengingat`, `memutuskan`, `penutup`, or `lampiran`. |
+| `search_within_law` | Search inside one known regulation after the relevant `law_id` is clear. |
+| `report_issue` | Report OCR mistakes, missing regulations, missing Pasal, broken links, outdated content, or other data quality issues. |
+| `list_laws` | Browse regulations with type, year, status, title, issuing body, and pagination filters. |
 
 Schemas + example calls: [docs/tools.md](./docs/tools.md).
 
@@ -85,8 +90,11 @@ Once connected, ask your AI assistant questions like:
 - "What are contract workers' rights under Indonesian law?"
 - "Compare worker rights before and after the Job Creation Law."
 - "What is the minimum marriage age in Indonesia?"
+- "Tampilkan struktur UU ITE dan ambil bagian Menimbang serta Pasal 27."
+- "Cari dalam UU PDP bagian tentang pengendali data, lalu cek status peraturannya."
+- "Saya menemukan OCR yang salah di Pasal ini; laporkan koreksinya ke Pasal.id."
 
-The assistant will call the MCP tools, retrieve the exact article text, and answer with a direct citation — no hallucination.
+The assistant should search first, retrieve only the needed Pasal or regulation part, verify status/provenance when the answer depends on currency, and use `report_issue` when the parsed corpus has a real data problem.
 
 ## About the data
 
