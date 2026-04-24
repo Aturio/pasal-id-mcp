@@ -41,5 +41,6 @@ jobs:
       - name: Verify
         run: |
           sleep 5
-          curl -sSf "https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.aturio/pasal-id-mcp" \
-            | jq -e '.servers[0].name == "io.github.aturio/pasal-id-mcp"'
+          VERSION="$(jq -r .version server.json)"
+          curl -sSf "https://registry.modelcontextprotocol.io/v0.1/servers?search=pasal" \
+            | jq -e --arg version "$VERSION" '.servers[] | select(.server.name == "io.github.Aturio/pasal-id-mcp" and .server.version == $version and ._meta."io.modelcontextprotocol.registry/official".isLatest == true)'
