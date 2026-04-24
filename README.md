@@ -1,6 +1,6 @@
 # Pasal.id — Indonesian Law MCP Server
 
-**The first open, AI-native Indonesian legal database.** Gives Claude and any MCP-compatible AI assistant grounded, citation-ready access to 40,000+ Indonesian regulations — UU, PP, Perpres, PERMEN, PERDA, and 20+ other regulation types — directly from authoritative sources (peraturan.go.id, BPK JDIH, JDIH MK, JDIHN).
+**The first open, AI-native Indonesian legal database.** Gives Claude and any MCP-compatible AI assistant grounded, citation-ready access to 100,000+ Indonesian regulations — UU, PP, Perpres, PERMEN, PERDA, and 20+ other regulation types — directly from authoritative sources (peraturan.go.id, BPK JDIH, JDIH MK, JDIHN).
 
 - **Live server:** `https://mcp.pasal.id/mcp`
 - **Transport:** Streamable HTTP
@@ -12,7 +12,7 @@
 
 Indonesian law is scattered across dozens of government portals, each with its own PDF quirks and status ambiguities. Most LLM answers about Indonesian regulations are hallucinated — the training data is thin, and the live web isn't indexed for precise legal retrieval.
 
-Pasal.id consolidates 40,000+ regulations into structured data (pasal-level granularity, whole-law hierarchy, preamble sections, amendment history, and legal-status provenance) and exposes it to AI assistants via MCP. Every answer an LLM gives using this server can be grounded in a specific article, regulation part, and authoritative source.
+Pasal.id consolidates 100,000+ regulations into structured data (pasal-level granularity, whole-law hierarchy, preamble sections, amendment history, and legal-status provenance) and exposes it to AI assistants via MCP. Every answer an LLM gives using this server can be grounded in a specific article, regulation part, and authoritative source.
 
 ## Connect
 
