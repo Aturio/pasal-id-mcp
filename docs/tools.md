@@ -1,6 +1,6 @@
 # MCP Tools
 
-The Pasal.id MCP server exposes nine intent-level tools. The live server is Indonesian-first: tool descriptions, parameter descriptions, and workflow prompts are written for Indonesian legal research, while the returned regulation names preserve official nomenclature.
+The Pasal.id MCP server exposes ten intent-level tools. The live server is Indonesian-first: tool descriptions, parameter descriptions, and workflow prompts are written for Indonesian legal research, while the returned regulation names preserve official nomenclature. (A `ping` health-check tool is also available for connection testing.)
 
 All tools require an authenticated MCP session.
 
@@ -8,7 +8,7 @@ All tools require an authenticated MCP session.
 
 1. Start with `search_laws` for topics, keywords, and loose references.
 2. Use `get_law_overview` or `get_law_structure` when the assistant needs provenance or the regulation map.
-3. Use `get_pasal` for an exact Pasal, or `get_law_part` for a bounded part such as Bab II, Menimbang, Mengingat, Penutup, or Lampiran.
+3. Use `get_pasal` for an exact Pasal, `read_law_section` to read several Pasal at once (a range, a whole Bab, or a list), or `get_law_part` for a bounded part such as Bab II, Menimbang, Mengingat, Penutup, or Lampiran.
 4. Use `search_within_law` only after the relevant `law_id` is clear.
 5. Use `get_law_status` before final citation when currency matters.
 6. Use `report_issue` only for real data problems, not for every exploratory zero-result search.
@@ -54,7 +54,7 @@ Retrieve a specific Pasal from a known regulation. Use the `law_id` returned by 
 }
 ```
 
-Successful responses include `node_id`, `content_text`, Pasal/ayat content, `pasal_url`, `law_url`, `source_pdf_url`, `source_family`, `content_verified`, and `correction_url` so users can inspect or correct OCR issues.
+Successful responses include `node_id`, full untruncated `content_text`, per-ayat content, `pasal_url`, `law_url`, `source_pdf_url`, `source_family`, `content_verified`, and `correction_url` so users can inspect or correct OCR issues.
 
 ## 3. `get_law_status`
 
@@ -138,11 +138,40 @@ Fetch one bounded part of a regulation. Prefer `node_id` from `get_law_structure
 }
 ```
 
-`part_type` supports `preamble`, `menimbang`, `mengingat`, `memutuskan`, `menetapkan`, `penutup`, `penjelasan`, and `lampiran`.
+`part_type` accepts `preamble`, `menimbang`, `mengingat`, `memutuskan`, `menetapkan`, `penutup`, `penjelasan`, and `lampiran` (case-insensitive).
 
 Large parts return `truncated: true` and `next_cursor`; call again with the cursor to continue.
 
-## 7. `search_within_law`
+## 7. `read_law_section`
+
+Batch reader for multiple Pasal in a single call — the preferred tool for reading 5+ Pasal in sequence (an article-by-article walk-through, a full Bab, or a range like Pasal 5–12). Each returned section carries the full `content_text`, and cross-references are resolved server-side.
+
+**Input:**
+
+```json
+{
+  "law_id": 3019,
+  "scope": { "type": "pasal_numbers", "numbers": ["27", "28", "45"] }
+}
+```
+
+**`scope` shapes** (choose one):
+
+- `{ "type": "whole" }` — walk the entire law (paged).
+- `{ "type": "pasal_numbers", "numbers": ["5", "6", "12"] }` — a specific list.
+- `{ "type": "pasal_range", "from": "5", "to": "12" }` — an inclusive range.
+- `{ "type": "bab", "number": "II" }` — every Pasal under a Bab.
+- `{ "type": "node_ids", "ids": [11966151] }` — explicit node ids.
+
+**`include`** (optional) selects extra per-section fields and **replaces** the default `["cross_refs"]`:
+
+- `cross_refs` *(default)* — citations resolved against the corpus.
+- `ayats` — per-ayat breakdown (`node_id` + text). Opt-in: each section already carries the full `content_text`, so request this only when you need per-ayat node ids/segmentation. For both, pass `["ayats", "cross_refs"]`.
+- `node_metadata` — PDF page spans and structural ids.
+
+Returns a `sections` list keyed by `kind` (`"pasal"` or `"bab"` — Bab rows act as delimiters during `whole`/`pasal_range` walks), bounded by `max_chars` (default 30k, hard cap 100k). Large reads return `truncated: true` + an opaque `next_cursor`; call again with `cursor` to continue. `pasal_numbers` supports partial success — missing entries land in `missing_pasals` with a hint rather than failing the whole call.
+
+## 8. `search_within_law`
 
 Search terms inside one known regulation. This keeps the context bounded after the relevant `law_id` is known.
 
@@ -158,7 +187,7 @@ Search terms inside one known regulation. This keeps the context bounded after t
 
 No-hit responses encourage retrying with broader terms and suggest `report_issue` only when the user expected specific text to exist in the parsed law.
 
-## 8. `report_issue`
+## 9. `report_issue`
 
 Report data quality problems from inside the MCP workflow. This is the escape hatch for OCR mistakes, missing regulations, missing Pasal, incorrect content, broken links, stale content, or other corpus issues.
 
@@ -177,11 +206,11 @@ Report data quality problems from inside the MCP workflow. This is the escape ha
 }
 ```
 
-`report_type` supports `ocr_correction`, `missing_regulation`, `missing_pasal`, `incorrect_content`, `broken_link`, `outdated_content`, and `other`.
+`report_type` accepts `ocr_correction`, `missing_regulation`, `missing_pasal`, `incorrect_content`, `broken_link`, `outdated_content`, and `other`.
 
 For `ocr_correction`, include `node_id`, `current_content`, and `suggested_content` from `get_pasal`. OCR corrections are routed to the same review queue as `/koreksi`; general reports are routed to the `/masukan` feedback queue.
 
-## 9. `list_laws`
+## 10. `list_laws`
 
 Browse regulations with filters when the user asks for a class of laws rather than a topical search.
 
