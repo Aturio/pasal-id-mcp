@@ -65,7 +65,7 @@ Settings → Developer Tools → Add MCP Server → paste `https://mcp.pasal.id/
 
 ## Tools
 
-The server exposes nine intent-level tools to AI assistants:
+The server exposes ten intent-level tools to AI assistants:
 
 | Tool | Purpose |
 |---|---|
@@ -75,6 +75,7 @@ The server exposes nine intent-level tools to AI assistants:
 | `get_law_overview` | Read canonical metadata, source/provenance, verification, freshness, and compact outline counts. |
 | `get_law_structure` | Inspect the hierarchy of Bab, Bagian, Pasal, Pembukaan, Penutup, Penjelasan, and Lampiran without loading the whole law. |
 | `get_law_part` | Fetch a bounded part by `node_id`, selector, or special part such as `menimbang`, `mengingat`, `memutuskan`, `penutup`, or `lampiran`. |
+| `read_law_section` | Read many Pasal in one call — a range, a whole Bab, or an explicit list — with cross-references resolved; the batch reader for article-by-article walk-throughs. |
 | `search_within_law` | Search inside one known regulation after the relevant `law_id` is clear. |
 | `report_issue` | Report OCR mistakes, missing regulations, missing Pasal, broken links, outdated content, or other data quality issues. |
 | `list_laws` | Browse regulations with type, year, status, title, issuing body, and pagination filters. |
