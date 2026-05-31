@@ -3,7 +3,7 @@
   "name": "io.github.Aturio/pasal-id-mcp",
   "title": "Pasal.id — Indonesian Law",
   "description": "Search-first MCP for Indonesian laws: Pasal text, status, structure, provenance, and reports.",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "repository": {
     "url": "https://github.com/Aturio/pasal-id-mcp",
     "source": "github"
