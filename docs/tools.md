@@ -227,6 +227,25 @@ Browse regulations with filters when the user asks for a class of laws rather th
 }
 ```
 
+## 11. `search_court_decisions`
+
+Search Indonesian Constitutional Court (Mahkamah Konstitusi) decisions across all four lanes — judicial review (PUU), inter-institutional disputes (SKLN), national-election results (PHPU), and regional-election results (PHPKADA). Filter by the reviewed law, lane, ruling (`amar`), year, type of review, presence of a dissenting opinion, or judge name; use `query` for topic or classification keywords.
+
+**Input:**
+
+```json
+{
+  "reviewed_law": "uu 13 2003",
+  "lane": "puu",
+  "amar": "dikabulkan_sebagian",
+  "year": 2024,
+  "has_dissent": true,
+  "limit": 20
+}
+```
+
+Answers questions such as "which laws did the Constitutional Court strike down in 2024" or "decisions with a dissenting opinion". `amar` accepts values like `dikabulkan_sebagian`, `ditolak`, and `inkonstitusional_bersyarat`; pass `__ketetapan__` for final orders without a merits ruling. Each result carries the ruling, decision date, reviewed-UU references, and a canonical Pasal.id reader URL.
+
 ## Language
 
 Use Bahasa Indonesia queries for best results. Do not translate official regulation names. It is fine to answer the user in English after retrieving Indonesian source text, but citations should preserve official Indonesian titles.

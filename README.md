@@ -65,7 +65,7 @@ Settings → Developer Tools → Add MCP Server → paste `https://mcp.pasal.id/
 
 ## Tools
 
-The server exposes ten intent-level tools to AI assistants:
+The server exposes eleven intent-level tools to AI assistants:
 
 | Tool | Purpose |
 |---|---|
@@ -79,6 +79,7 @@ The server exposes ten intent-level tools to AI assistants:
 | `search_within_law` | Search inside one known regulation after the relevant `law_id` is clear. |
 | `report_issue` | Report OCR mistakes, missing regulations, missing Pasal, broken links, outdated content, or other data quality issues. |
 | `list_laws` | Browse regulations with type, year, status, title, issuing body, and pagination filters. |
+| `search_court_decisions` | Search Constitutional Court (Mahkamah Konstitusi) decisions by reviewed law, lane (PUU/SKLN/PHPU/PHPKADA), ruling, year, dissent, or judge. |
 
 Schemas + example calls: [docs/tools.md](./docs/tools.md).
 
