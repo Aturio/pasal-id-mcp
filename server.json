@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Aturio/pasal-id-mcp",
   "title": "Pasal.id — Indonesian Law",
-  "description": "Search-first MCP for Indonesian laws: Pasal text, status, structure, provenance, and reports.",
-  "version": "1.7.0",
+  "description": "Task-oriented MCP for Indonesian law: resolve any citation, get compact law context, read with flexible selectors, granular search, MK decisions, and issue reports.",
+  "version": "2.0.0",
   "repository": {
     "url": "https://github.com/Aturio/pasal-id-mcp",
     "source": "github"

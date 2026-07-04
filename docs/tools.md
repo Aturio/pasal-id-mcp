@@ -1,255 +1,162 @@
-# MCP Tools
+# Tool reference (v2.0.0)
 
-The Pasal.id MCP server exposes ten intent-level tools. The live server is Indonesian-first: tool descriptions, parameter descriptions, and workflow prompts are written for Indonesian legal research, while the returned regulation names preserve official nomenclature. (A `ping` health-check tool is also available for connection testing.)
+Authoritative schemas live in the unauthenticated server card:
+`https://mcp.pasal.id/.well-known/mcp/server-card.json`.
 
-All tools require an authenticated MCP session.
+Shared v2 contract: every response carries `request_id` and `disclaimer`;
+errors are typed (`error_code`, `message`, `recovery.suggestion`,
+`valid_values`); text-bearing tools declare budgets (`limit`, `max_chars`,
+cursors, truncation flags). Workflow: `resolve_law` -> `get_law_context` ->
+`read_law`; use `search_legal` when the relevant law is unknown.
 
-## Recommended Workflow
+## `search_legal`
 
-1. Start with `search_laws` for topics, keywords, and loose references.
-2. Use `get_law_overview` or `get_law_structure` when the assistant needs provenance or the regulation map.
-3. Use `get_pasal` for an exact Pasal, `read_law_section` to read several Pasal at once (a range, a whole Bab, or a list), or `get_law_part` for a bounded part such as Bab II, Menimbang, Mengingat, Penutup, or Lampiran.
-4. Use `search_within_law` only after the relevant `law_id` is clear.
-5. Use `get_law_status` before final citation when currency matters.
-6. Use `report_issue` only for real data problems, not for every exploratory zero-result search.
+WHEN the relevant law is unknown, search Indonesian legal text with validated filters. Canonical workflow: search_legal -> resolve_law/get_law_context -> read_law. Use normal Bahasa Indonesia terms; avoid boolean operator syntax.
 
-## 1. `search_laws`
+| Parameter | Type | Notes |
+|---|---|---|
+| `query` | string | **required** — Indonesian legal terms, topic, or citation fragment. |
+| `law_id` | integer | Optional canonical law_id for within-law search. |
+| `regulation_types` | array | Optional regulation type filters, e.g. ['UU', 'PP']. |
+| `year` | integer | Exact enactment year filter. |
+| `year_from` | integer | Inclusive start year. |
+| `year_to` | integer | Inclusive end year. |
+| `status` | string | Optional status filter: berlaku, diubah, dicabut, tidak_berlaku. |
+| `issuing_body` | string | Optional issuing body or abbreviation, e.g. DPR, Presiden, DKI Jakarta. |
+| `region` | string | Optional region hint for regional regulations. |
+| `limit` | integer | Maximum results. Default 10; server clamp 1-20. |
 
-Search-first entry point across Indonesian regulations. It accepts Indonesian legal topics, keywords, and citation-like references, then returns law metadata, Pasal-level hits, snippets, stable Pasal.id URLs, and provenance/trust fields where available.
-
-**Input:**
-
-```json
-{
-  "query": "pemutusan hubungan kerja pesangon",
-  "regulation_type": "PP",
-  "year_from": 2020,
-  "year_to": 2026,
-  "language": "id",
-  "limit": 10
-}
-```
-
-## 2. `get_pasal`
-
-Retrieve a specific Pasal from a known regulation. Use the `law_id` returned by `search_laws`, `list_laws`, or `get_law_structure` whenever possible.
-
-**Input:**
+Granular search: governor regulations about wastewater in DKI Jakarta.
 
 ```json
-{
-  "law_id": 3019,
-  "pasal_number": "27"
-}
+{"query": "pengelolaan air limbah", "regulation_types": ["PERGUB"], "region": "dki jakarta"}
 ```
 
-**Also supports:**
+Topic search with a year floor; diagnostics explain any relaxation applied.
 
 ```json
-{
-  "law_type": "UU",
-  "law_number": "11",
-  "year": 2008,
-  "pasal_number": "27"
-}
+{"query": "perlindungan konsumen fintech", "year_from": 2016}
 ```
 
-Successful responses include `node_id`, full untruncated `content_text`, per-ayat content, `pasal_url`, `law_url`, `source_pdf_url`, `source_family`, `content_verified`, and `correction_url` so users can inspect or correct OCR issues.
+## `resolve_law`
 
-## 3. `get_law_status`
+WHEN a law is named by citation, title, or shorthand, resolve it to one canonical law_id. Canonical workflow: resolve_law -> get_law_context -> read_law.
 
-Check whether a regulation is currently in force, amended, revoked, or otherwise not current. This is the canonical status and relationship check.
+| Parameter | Type | Notes |
+|---|---|---|
+| `reference` | string | **required** — Citation or title-like reference, e.g. 'UU 27 tahun 2022' or 'UU PDP'. |
+| `region` | string | Optional region hint, e.g. 'DKI Jakarta'. |
 
-**Input:**
+Region-qualified citation resolves to the exact Jakarta regulation.
 
 ```json
-{
-  "law_id": 3019
-}
+{"reference": "Pergub DKI Jakarta 220 tahun 2010"}
 ```
 
-Responses include human-readable relationship labels plus normalized relationship codes for amendment and revocation chains.
-
-## 4. `get_law_overview`
-
-Return canonical metadata, issuing body, status, provenance, source URLs, source PDF URL, verification/freshness fields, and compact outline/count summaries.
-
-**Input:**
+Ambiguous shorthand returns candidates (UU 1/2023 vs UU 1/1946) instead of guessing.
 
 ```json
-{
-  "law_type": "UU",
-  "law_number": "11",
-  "year": 2008
-}
+{"reference": "kuhp"}
 ```
 
-Use this when the assistant needs to explain why the retrieved law is trustworthy before reading details.
+## `get_law_context`
 
-## 5. `get_law_structure`
+WHEN a law_id is known, get compact status, outline, or relationship context before reading text. Canonical workflow: resolve_law -> get_law_context -> read_law.
 
-Inspect a regulation hierarchy without loading the full text. This is the progressive-disclosure tool for "UU ini isinya apa saja?"
+| Parameter | Type | Notes |
+|---|---|---|
+| `law` | integer \| string | **required** — Canonical law_id or a citation string accepted by resolve_law. |
+| `detail` | string | Context detail level. summary is compact; outline helps choose read_law selectors. |
 
-**Input:**
+~2KB orientation: status, structure counts, top-level outline.
 
 ```json
-{
-  "law_id": 3019,
-  "depth": 2,
-  "include_special_parts": true
-}
+{"law": "UU 27 tahun 2022", "detail": "summary"}
 ```
 
-Returns compact nodes with `node_id`, `node_type`, `number`, `heading`, `parent_id`, `children_count`, `pasal_count`, and special-part flags/counts for `preamble`, `penutup`, `penjelasan`, and `lampiran`.
-
-For preamble-heavy research, responses also include a `preamble_sections_summary` indicating whether parsed `menimbang`, `mengingat`, `memutuskan`, and `menetapkan` sections were detected.
-
-## 6. `get_law_part`
-
-Fetch one bounded part of a regulation. Prefer `node_id` from `get_law_structure` for deterministic reads; use selectors when the part is obvious.
-
-**By node:**
+Typed relationship groups: amendments, court reviews, related works.
 
 ```json
-{
-  "law_id": 3019,
-  "node_id": 11966151,
-  "include_children": true,
-  "max_chars": 12000
-}
+{"law": 776, "detail": "relationships"}
 ```
 
-**By selector:**
+## `read_law`
+
+WHEN a law is known and text is needed, read by forgiving selector strings. Canonical workflow: resolve_law -> get_law_context -> read_law. Invalid selectors return typed invalid_selector errors with recovery guidance.
+
+| Parameter | Type | Notes |
+|---|---|---|
+| `law` | integer \| string | **required** — Canonical law_id or a citation string accepted by resolve_law. |
+| `selector` | string | **required** — Selector string: all, pasal 27, pasal 27-30, bab III, menimbang, mengingat, penjelasan umum, penjelasan pasal 5, lampiran. |
+| `max_chars` | integer | Maximum aggregate characters. Default 30000; server clamp 1000-100000. |
+| `cursor` | string | Opaque cursor from a prior truncated response. |
+
+Read a pasal range.
 
 ```json
-{
-  "law_id": 3019,
-  "node_type": "bab",
-  "number": "II"
-}
+{"law": "UU 27 tahun 2022", "selector": "pasal 65-67"}
 ```
 
-**Special parts:**
+Read the official elucidation of one article.
 
 ```json
-{
-  "law_id": 3019,
-  "part_type": "menimbang"
-}
+{"law": 702, "selector": "penjelasan pasal 27"}
 ```
 
-`part_type` accepts `preamble`, `menimbang`, `mengingat`, `memutuskan`, `menetapkan`, `penutup`, `penjelasan`, and `lampiran` (case-insensitive).
+## `search_court_decisions`
 
-Large parts return `truncated: true` and `next_cursor`; call again with the cursor to continue.
+WHEN the user asks about Mahkamah Konstitusi decisions, search PUU/judicial review, SKLN, PHPU, or PHPKADA decisions. Use reviewed_law with any citation/law_id accepted by resolve_law.
 
-## 7. `read_law_section`
+| Parameter | Type | Notes |
+|---|---|---|
+| `query` | string | Optional topic/classification keyword, e.g. 'pemilu' or 'kebebasan berserikat'. |
+| `reviewed_law` | string | Law being reviewed, e.g. 'UU 13 tahun 2003', 'UU PDP', or a law_id. |
+| `lane` | string | Case lane: puu, skln, phpu, phpkada. |
+| `amar` | string | Decision outcome filter, e.g. dikabulkan_sebagian, ditolak, inkonstitusional_bersyarat. |
+| `year` | integer | Decision year. |
+| `jenis_pengujian` | string | Review type, e.g. materiil or formil. |
+| `has_dissent` | boolean | True for decisions with dissenting opinion; false for decisions without dissent. |
+| `judge` | string | Constitutional justice name matched through curated aliases. |
+| `limit` | integer | Maximum results. Default 20; server clamp 1-50. |
 
-Batch reader for multiple Pasal in a single call — the preferred tool for reading 5+ Pasal in sequence (an article-by-article walk-through, a full Bab, or a range like Pasal 5–12). Each returned section carries the full `content_text`, and cross-references are resolved server-side.
-
-**Input:**
+Judicial-review decisions touching the Manpower Law.
 
 ```json
-{
-  "law_id": 3019,
-  "scope": { "type": "pasal_numbers", "numbers": ["27", "28", "45"] }
-}
+{"reviewed_law": "uu 13 2003", "lane": "puu"}
 ```
 
-**`scope` shapes** (choose one):
+## `report_issue`
 
-- `{ "type": "whole" }` — walk the entire law (paged).
-- `{ "type": "pasal_numbers", "numbers": ["5", "6", "12"] }` — a specific list.
-- `{ "type": "pasal_range", "from": "5", "to": "12" }` — an inclusive range.
-- `{ "type": "bab", "number": "II" }` — every Pasal under a Bab.
-- `{ "type": "node_ids", "ids": [11966151] }` — explicit node ids.
+WHEN the user finds a real Pasal.id data problem, submit structured feedback. Use search_failure only when a query should have found a known expected law.
 
-**`include`** (optional) selects extra per-section fields and **replaces** the default `["cross_refs"]`:
+| Parameter | Type | Notes |
+|---|---|---|
+| `report_type` | string | **required** — Issue type. |
+| `title` | string | Optional short Indonesian title; auto-derived when omitted. |
+| `description` | string | Context; for search_failure this is the failed query. |
+| `expected_citation` | string | Expected law citation for search_failure, e.g. 'UU No. 27 Tahun 2022'. |
+| `law_id` | integer | Pasal.id law_id if known. |
+| `law_type` | string | Legacy law type, e.g. UU or PP. |
+| `law_number` | string | Legacy law number. |
+| `year` | integer | Legacy law year. |
+| `pasal_number` | string | Article number if relevant. |
+| `node_id` | integer | node_id for OCR correction. |
+| `current_content` | string | Current text for OCR correction. |
+| `suggested_content` | string | Suggested corrected text for OCR correction. |
+| `reference_url` | string | Supporting official URL, if available. |
+| `contact_email` | string | Optional contact email. |
 
-- `cross_refs` *(default)* — citations resolved against the corpus.
-- `ayats` — per-ayat breakdown (`node_id` + text). Opt-in: each section already carries the full `content_text`, so request this only when you need per-ayat node ids/segmentation. For both, pass `["ayats", "cross_refs"]`.
-- `node_metadata` — PDF page spans and structural ids.
-
-Returns a `sections` list keyed by `kind` (`"pasal"` or `"bab"` — Bab rows act as delimiters during `whole`/`pasal_range` walks), bounded by `max_chars` (default 30k, hard cap 100k). Large reads return `truncated: true` + an opaque `next_cursor`; call again with `cursor` to continue. `pasal_numbers` supports partial success — missing entries land in `missing_pasals` with a hint rather than failing the whole call.
-
-## 8. `search_within_law`
-
-Search terms inside one known regulation. This keeps the context bounded after the relevant `law_id` is known.
-
-**Input:**
+Failed-search reports feed the search regression suite.
 
 ```json
-{
-  "law_id": 3019,
-  "query": "penghinaan pencemaran nama baik",
-  "limit": 10
-}
+{"report_type": "search_failure", "description": "cari 'baku mutu udara jakarta'", "expected_citation": "Kepgub DKI 551/2001"}
 ```
 
-No-hit responses encourage retrying with broader terms and suggest `report_issue` only when the user expected specific text to exist in the parsed law.
+## Legacy tools
 
-## 9. `report_issue`
-
-Report data quality problems from inside the MCP workflow. This is the escape hatch for OCR mistakes, missing regulations, missing Pasal, incorrect content, broken links, stale content, or other corpus issues.
-
-**Input:**
-
-```json
-{
-  "report_type": "missing_pasal",
-  "title": "Pasal 74 tidak ditemukan",
-  "description": "Pengguna mencari Pasal 74 UU Perseroan Terbatas tetapi hasil struktur tidak menampilkan pasal tersebut.",
-  "law_type": "UU",
-  "law_number": "40",
-  "year": 2007,
-  "pasal_number": "74",
-  "reference_url": "https://peraturan.go.id"
-}
-```
-
-`report_type` accepts `ocr_correction`, `missing_regulation`, `missing_pasal`, `incorrect_content`, `broken_link`, `outdated_content`, and `other`.
-
-For `ocr_correction`, include `node_id`, `current_content`, and `suggested_content` from `get_pasal`. OCR corrections are routed to the same review queue as `/koreksi`; general reports are routed to the `/masukan` feedback queue.
-
-## 10. `list_laws`
-
-Browse regulations with filters when the user asks for a class of laws rather than a topical search.
-
-**Input:**
-
-```json
-{
-  "regulation_type": "UU",
-  "year": 2023,
-  "status": "berlaku",
-  "search": "kesehatan",
-  "page": 1,
-  "per_page": 20
-}
-```
-
-## 11. `search_court_decisions`
-
-Search Indonesian Constitutional Court (Mahkamah Konstitusi) decisions across all four lanes — judicial review (PUU), inter-institutional disputes (SKLN), national-election results (PHPU), and regional-election results (PHPKADA). Filter by the reviewed law, lane, ruling (`amar`), year, type of review, presence of a dissenting opinion, or judge name; use `query` for topic or classification keywords.
-
-**Input:**
-
-```json
-{
-  "reviewed_law": "uu 13 2003",
-  "lane": "puu",
-  "amar": "dikabulkan_sebagian",
-  "year": 2024,
-  "has_dissent": true,
-  "limit": 20
-}
-```
-
-Answers questions such as "which laws did the Constitutional Court strike down in 2024" or "decisions with a dissenting opinion". `amar` accepts values like `dikabulkan_sebagian`, `ditolak`, and `inkonstitusional_bersyarat`; pass `__ketetapan__` for final orders without a merits ruling. Each result carries the ruling, decision date, reviewed-UU references, and a canonical Pasal.id reader URL.
-
-## Language
-
-Use Bahasa Indonesia queries for best results. Do not translate official regulation names. It is fine to answer the user in English after retrieving Indonesian source text, but citations should preserve official Indonesian titles.
-
-## Rate Limits
-
-Free-tier limits are enforced per authenticated user. If a client receives `429`, back off before retrying. For research or commercial limits, contact Pasal.id through [pasal.id/masukan](https://pasal.id/masukan).
+`search_laws`, `get_pasal`, `get_law_status`, `get_law_overview`,
+`get_law_structure`, `get_law_part`, `read_law_section`,
+`search_within_law`, and `list_laws` remain callable for existing
+integrations but are deprecated (off-card since 2.0.0) and scheduled for
+removal after August 2026. Migrate: reading -> `read_law`,
+orientation/status -> `get_law_context`, all search -> `search_legal`.

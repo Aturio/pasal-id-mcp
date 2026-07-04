@@ -65,21 +65,24 @@ Settings → Developer Tools → Add MCP Server → paste `https://mcp.pasal.id/
 
 ## Tools
 
-The server exposes eleven intent-level tools to AI assistants:
+The server exposes six task-oriented tools to AI assistants (v2.0.0 — the earlier
+eleven-tool surface keeps working for existing integrations but is deprecated and
+scheduled for removal after August 2026):
 
 | Tool | Purpose |
 |---|---|
-| `search_laws` | Search-first entry point for Indonesian regulation topics, keywords, and citation-like references. |
-| `get_pasal` | Retrieve a specific Pasal with ayat context, source URL, PDF provenance, and correction metadata. |
-| `get_law_status` | Check whether a regulation is in force, amended, or revoked, including normalized relationship codes. |
-| `get_law_overview` | Read canonical metadata, source/provenance, verification, freshness, and compact outline counts. |
-| `get_law_structure` | Inspect the hierarchy of Bab, Bagian, Pasal, Pembukaan, Penutup, Penjelasan, and Lampiran without loading the whole law. |
-| `get_law_part` | Fetch a bounded part by `node_id`, selector, or special part such as `menimbang`, `mengingat`, `memutuskan`, `penutup`, or `lampiran`. |
-| `read_law_section` | Read many Pasal in one call — a range, a whole Bab, or an explicit list — with cross-references resolved; the batch reader for article-by-article walk-throughs. |
-| `search_within_law` | Search inside one known regulation after the relevant `law_id` is clear. |
-| `report_issue` | Report OCR mistakes, missing regulations, missing Pasal, broken links, outdated content, or other data quality issues. |
-| `list_laws` | Browse regulations with type, year, status, title, issuing body, and pagination filters. |
+| `search_legal` | Find regulations when you do not yet know which law applies — topics, keywords, or messy citations, with validated granular filters (multiple types, year, status, issuing body, region) and diagnostics that explain zero results. |
+| `resolve_law` | Turn any reference — "KUHP", "UU 13/2003", "Pergub DKI 220 tahun 2010", a pasted title — into a canonical `law_id`, or get disambiguation candidates instead of a guess. |
+| `get_law_context` | Compact orientation on one law: summary (status, structure counts, top-level outline), a pasal-range-compressed outline, or typed relationship groups (amendments, court reviews) — token-budgeted. |
+| `read_law` | Read text with forgiving selectors: `pasal 27`, `pasal 27-30`, `bab III`, `menimbang`, `penjelasan pasal 5`, `lampiran`, `all` — with cursors, char budgets, and explicit `missing` reporting. |
 | `search_court_decisions` | Search Constitutional Court (Mahkamah Konstitusi) decisions by reviewed law, lane (PUU/SKLN/PHPU/PHPKADA), ruling, year, dissent, or judge. |
+| `report_issue` | Report data problems; the `search_failure` type ("I searched X and expected law Y") feeds the search regression suite directly. |
+
+Every v2 response carries a `request_id` and structured `diagnostics`; errors are
+typed (`error_code` + `recovery` guidance + `valid_values`) so assistants can
+self-correct instead of retrying blindly. The canonical workflow: `resolve_law`
+when you know the law → `get_law_context` to orient → `read_law` for text;
+`search_legal` when you don't.
 
 Schemas + example calls: [docs/tools.md](./docs/tools.md).
 
