@@ -1,162 +1,92 @@
-# Client Setup
+# Connect an MCP client
 
-Per-client instructions for connecting to the Pasal.id MCP server at `https://mcp.pasal.id/mcp`.
+Use `https://mcp.pasal.id/mcp` with **Streamable HTTP** and a free Pasal.id account. Interactive clients should complete browser OAuth. Personal tokens from [Akun → Akses API & MCP](https://pasal.id/akun) are an alternative for automation and clients without browser OAuth.
 
-All clients need the same two things:
-
-1. **A free Pasal.id account** — sign up at [pasal.id](https://pasal.id) (Google OAuth or email).
-2. **Either (a) OAuth device-code flow** (Claude Code handles this) **or (b) a personal access token** from [pasal.id/akun](https://pasal.id/akun) for clients that expect a static bearer header.
-
----
+The [website connection guide](https://pasal.id/hubungkan) is the central Pasal.id walkthrough. Client interfaces and workspace policies can change.
 
 ## Claude Code
-
-**Option A — OAuth (recommended for interactive use).**
 
 ```bash
 claude mcp add --transport http pasal-id https://mcp.pasal.id/mcp
 ```
 
-On first tool call, Claude Code opens your browser. Log in, approve access, and the token is cached automatically.
-
-**Option B — personal access token (for CI / automation).**
+Complete OAuth when prompted; use `/mcp` in Claude Code to inspect the connection or authenticate. For automation, set `PASAL_MCP_TOKEN` in your shell or secret manager and use:
 
 ```bash
 claude mcp add --transport http pasal-id https://mcp.pasal.id/mcp \
   --header "Authorization: Bearer ${PASAL_MCP_TOKEN}"
 ```
 
-Set `PASAL_MCP_TOKEN` in your shell or secret manager before running.
+## Claude Desktop and Claude on the web
 
-**Verify:**
+Open **Settings → Connectors → Add custom connector**, enter the endpoint, and connect your Pasal.id account. Enable the connector in the conversation. Remote connectors use this interface; the local desktop stdio configuration file is not interchangeable with a hosted HTTP connector.
+
+## Codex CLI and app
 
 ```bash
-claude mcp list
+codex mcp add pasal-id --url https://mcp.pasal.id/mcp
+codex mcp login pasal-id
 ```
 
-You should see `pasal-id ✓ Connected`.
+For automation, configure an environment-variable reference instead of putting a token in a checked-in file:
 
----
-
-## Claude Desktop
-
-1. Open Claude Desktop → **Settings → Developer → Edit Config**.
-2. Paste into the `mcpServers` object:
-
-```json
-{
-  "mcpServers": {
-    "pasal-id": {
-      "type": "http",
-      "url": "https://mcp.pasal.id/mcp",
-      "headers": {
-        "Authorization": "Bearer ${PASAL_MCP_TOKEN}"
-      }
-    }
-  }
-}
+```bash
+codex mcp add pasal-id --url https://mcp.pasal.id/mcp \
+  --bearer-token-env-var PASAL_MCP_TOKEN
 ```
 
-3. Set `PASAL_MCP_TOKEN` in your environment (macOS: `~/.zshrc`; Windows: System Environment Variables).
-4. Fully quit and reopen Claude Desktop.
-
-**Config file location:**
-
-| OS      | Path                                                              |
-|---------|-------------------------------------------------------------------|
-| macOS   | `~/Library/Application Support/Claude/claude_desktop_config.json` |
-| Windows | `%APPDATA%\Claude\claude_desktop_config.json`                     |
-
----
+Run `codex mcp list` to inspect configured servers. See [OpenAI's MCP documentation](https://learn.chatgpt.com/docs/extend/mcp?surface=cli).
 
 ## Cursor
 
-1. **Settings → MCP → Add Server** *(Cursor 0.41+)* or edit `~/.cursor/mcp.json` directly.
-2. Add:
+Put this in `.cursor/mcp.json` for a project or `~/.cursor/mcp.json` for your user:
 
 ```json
 {
   "mcpServers": {
+    "pasal-id": { "url": "https://mcp.pasal.id/mcp" }
+  }
+}
+```
+
+Complete browser OAuth, then refresh the available tools. See the [Cursor MCP guide](https://cursor.com/docs/context/mcp).
+
+## VS Code
+
+Run **MCP: Add Server** and choose an HTTP server, or create `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
     "pasal-id": {
       "type": "http",
-      "url": "https://mcp.pasal.id/mcp",
-      "headers": {
-        "Authorization": "Bearer ${PASAL_MCP_TOKEN}"
-      }
+      "url": "https://mcp.pasal.id/mcp"
     }
   }
 }
 ```
 
-3. Restart Cursor.
-
-**Project-scoped alternative:** put the same JSON in `.cursor/mcp.json` at the workspace root — overrides the global config for that project only.
-
----
+VS Code uses the top-level `servers` key. Start the server and finish OAuth. See [VS Code's MCP documentation](https://code.visualstudio.com/docs/agent-customization/mcp-servers).
 
 ## Windsurf
 
-1. **Settings → Cascade → MCP Servers** or edit `~/.codeium/windsurf/mcp_config.json`.
-2. Add the same JSON block as Cursor above.
-3. Restart Windsurf.
+Use Windsurf's MCP settings to add the remote endpoint. If using a personal token, store it through the client's supported secret or environment configuration, then supply `Authorization: Bearer <token>`. Do not assume shell-style `${...}` substitution works in every client's JSON. Follow the [Windsurf MCP guide](https://docs.windsurf.com/windsurf/cascade/mcp) for the current configuration format.
 
----
+## ChatGPT
 
-## VS Code (MCP extension)
+Use ChatGPT's current custom MCP/app connection flow with the endpoint above and OAuth. Availability depends on the account and workspace policy. Follow [OpenAI's connection guide](https://developers.openai.com/plugins/deploy/connect-chatgpt) for the current interface; desktop JSON configuration from another client does not apply.
 
-1. **Command Palette → MCP: Add Server** or create `.vscode/mcp.json` in your workspace:
+## Verify and troubleshoot
 
-```json
-{
-  "mcpServers": {
-    "pasal-id": {
-      "type": "http",
-      "url": "https://mcp.pasal.id/mcp",
-      "headers": {
-        "Authorization": "Bearer ${PASAL_MCP_TOKEN}"
-      }
-    }
-  }
-}
-```
+After connecting, refresh tool discovery and check for `search_legal`, `resolve_law`, `get_law_context`, `read_law`, `search_court_decisions`, `report_issue`, and `ping`. Call `ping`, then try `resolve_law` with `{"reference":"UU 27 tahun 2022"}`.
 
-2. Reload the VS Code window.
-
----
-
-## ChatGPT Desktop *(April 2026+)*
-
-1. **Settings → Developer Tools → Add MCP Server**.
-2. Paste `https://mcp.pasal.id/mcp` as the URL.
-3. ChatGPT Desktop handles OAuth automatically on first tool call.
-
----
-
-## Generic `.mcp.json` template
-
-Any MCP client that supports the Streamable HTTP transport can use this:
-
-```json
-{
-  "mcpServers": {
-    "pasal-id": {
-      "type": "http",
-      "url": "https://mcp.pasal.id/mcp",
-      "headers": {
-        "Authorization": "Bearer ${PASAL_MCP_TOKEN}"
-      }
-    }
-  }
-}
-```
-
-## Troubleshooting
-
-| Symptom | Fix |
+| Symptom | Action |
 |---|---|
-| `401 token_missing` on first tool call | Token not set, expired, or header malformed. Regenerate at [pasal.id/akun](https://pasal.id/akun). |
-| Client never calls tools | Make sure the client was fully restarted after editing config; MCP servers aren't hot-reloaded. |
-| `307 Temporary Redirect` | Use the exact URL `https://mcp.pasal.id/mcp` — no trailing slash. |
-| Search returns 0 results but you know the law exists | Try the law's short reference (e.g. "uu 13 2003" or "UUD 1945") — Pasal.id's identity fast-path matches these directly. |
+| OAuth session expired or refresh token invalid | Reauthorize the affected saved connection. Stop retrying the same invalid refresh token. |
+| Personal token rejected | Check its expiry/revocation and the `Bearer ` prefix; replace that connection's token if necessary. |
+| Old 11-tool list | Reconnect and refresh the client's tool cache. The current discovery surface has seven tools. |
+| Redirect | Use the exact endpoint with no trailing slash. |
+| Empty search | Read `diagnostics`, try Indonesian terms or fewer filters, or resolve a known citation. |
+| Glama says unhealthy but a personal connection works | The directory test profile is separate. See [directory maintenance](directories.md). |
 
-For anything else: open an issue at [github.com/Aturio/pasal-id-mcp/issues](https://github.com/Aturio/pasal-id-mcp/issues) or contact us via [pasal.id/masukan](https://pasal.id/masukan).
+Never include tokens or account session data in public issues. Report reproducible integration problems through [GitHub Issues](https://github.com/Aturio/pasal-id-mcp/issues).

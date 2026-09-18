@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Aturio/pasal-id-mcp",
   "title": "Pasal.id — Indonesian Law",
-  "description": "Task-oriented MCP for Indonesian law: search, resolve citations, read laws, and MK decisions.",
-  "version": "2.0.0",
+  "description": "Search Indonesian laws, resolve citations, read articles, and find Constitutional Court decisions.",
+  "version": "2.0.1",
   "repository": {
     "url": "https://github.com/Aturio/pasal-id-mcp",
     "source": "github"
@@ -13,6 +13,15 @@
     {
       "type": "streamable-http",
       "url": "https://mcp.pasal.id/mcp"
+    }
+  ],
+  "icons": [
+    {
+      "src": "https://pasal.id/android-chrome-512.png",
+      "mimeType": "image/png",
+      "sizes": [
+        "512x512"
+      ]
     }
   ]
 }

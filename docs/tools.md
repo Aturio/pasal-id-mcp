@@ -1,10 +1,13 @@
-# Tool reference (v2.0.0)
+# Tool reference (live v2 interface)
 
-Authoritative schemas live in the unauthenticated server card:
-`https://mcp.pasal.id/.well-known/mcp/server-card.json`.
+The live interface exposes six research/feedback tools plus `ping` (seven tools total).
+The public [server card](https://mcp.pasal.id/.well-known/mcp/server-card.json) and
+[checked-in snapshot](../server-card.json) document their input schemas. Authenticated
+MCP `tools/list` is authoritative for the executable contract. Snapshot refreshed
+on September 18, 2026; the runtime reports version 2.0.0.
 
-Shared v2 contract: every response carries `request_id` and `disclaimer`;
-errors are typed (`error_code`, `message`, `recovery.suggestion`,
+Research tools return structured results and diagnostics; `ping` is a small
+liveness response. Data errors are typed (`error_code`, `message`, `recovery.suggestion`,
 `valid_values`); text-bearing tools declare budgets (`limit`, `max_chars`,
 cursors, truncation flags). Workflow: `resolve_law` -> `get_law_context` ->
 `read_law`; use `search_legal` when the relevant law is unknown.
@@ -66,7 +69,7 @@ WHEN a law_id is known, get compact status, outline, or relationship context bef
 | Parameter | Type | Notes |
 |---|---|---|
 | `law` | integer \| string | **required** — Canonical law_id or a citation string accepted by resolve_law. |
-| `detail` | string | Context detail level. summary is compact; outline helps choose read_law selectors. |
+| `detail` | string | `summary` (default), `outline`, or `relationships`; outline helps choose read_law selectors. |
 
 ~2KB orientation: status, structure counts, top-level outline.
 
@@ -87,7 +90,7 @@ WHEN a law is known and text is needed, read by forgiving selector strings. Cano
 | Parameter | Type | Notes |
 |---|---|---|
 | `law` | integer \| string | **required** — Canonical law_id or a citation string accepted by resolve_law. |
-| `selector` | string | **required** — Selector string: all, pasal 27, pasal 27-30, bab III, menimbang, mengingat, penjelasan umum, penjelasan pasal 5, lampiran. |
+| `selector` | string | **required** — Selector string: all, pasal 27, pasal 27-30, comma-separated ranges, bab III, menimbang, mengingat, penjelasan umum, penjelasan pasal 5, lampiran. |
 | `max_chars` | integer | Maximum aggregate characters. Default 30000; server clamp 1000-100000. |
 | `cursor` | string | Opaque cursor from a prior truncated response. |
 
@@ -97,11 +100,14 @@ Read a pasal range.
 {"law": "UU 27 tahun 2022", "selector": "pasal 65-67"}
 ```
 
-Read the official elucidation of one article.
+Read separate article ranges without retrieving the entire law.
 
 ```json
-{"law": 702, "selector": "penjelasan pasal 27"}
+{"law": "UU 27 tahun 2022", "selector": "pasal 13-16, pasal 65-67", "max_chars": 12000}
 ```
+
+Read an article’s elucidation with `penjelasan pasal 5`. Continue truncated
+responses using the returned cursor and the same law/selector.
 
 ## `search_court_decisions`
 
@@ -152,11 +158,22 @@ Failed-search reports feed the search regression suite.
 {"report_type": "search_failure", "description": "cari 'baku mutu udara jakarta'", "expected_citation": "Kepgub DKI 551/2001"}
 ```
 
+## `ping`
+
+An authenticated health probe with no parameters:
+
+```json
+{}
+```
+
+Use this for liveness checks. `report_issue` submits feedback and must not be used
+to generate synthetic health-check reports.
+
 ## Legacy tools
 
 `search_laws`, `get_pasal`, `get_law_status`, `get_law_overview`,
 `get_law_structure`, `get_law_part`, `read_law_section`,
 `search_within_law`, and `list_laws` remain callable for existing
-integrations but are deprecated (off-card since 2.0.0) and scheduled for
-removal after August 2026. Migrate: reading -> `read_law`,
+integrations but are deprecated and hidden from current discovery. Do not
+build new integrations on them. Migrate: reading -> `read_law`,
 orientation/status -> `get_law_context`, all search -> `search_legal`.
