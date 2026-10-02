@@ -25,6 +25,8 @@ Plugin package versions are independent of the MCP Registry version in `server.j
 
 5. Commit and push only the reviewed public package and documentation. Create a GitHub Release from that exact public commit with tag `pasal-id-plugin-v0.1.1`, a matching versioned title, and the ZIP plus its SHA-256 file as assets. Draft the release first, inspect the assets and notes, then publish after the runtime gates pass. Do not attach a private repository archive.
 
+A dedicated reviewer account must work without MFA approval, email/SMS codes, magic links, or private network access. Supply its access details only through the secure portal form, never the archive or public repository.
+
 Release notes should identify the four supported workflows, enduring endpoint, authentication, tested clients and material capability limits. State directory approval only if it has actually been granted. No demo recording or successful host evaluation should be invented.
 
 ## Maintain compatibility

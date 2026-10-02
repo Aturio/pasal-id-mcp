@@ -38,7 +38,7 @@ SKILLS = frozenset({
 })
 PUBLIC_TOOLS = frozenset({
     "search_legal", "resolve_law", "get_law_context", "read_law",
-    "search_court_decisions", "report_issue", "ping",
+    "search_court_decisions", "report_issue",
 })
 RELEASE_ROOT_FILES = ("plugin.json", "mcp.json", "LICENSE", "README.md")
 
