@@ -24,321 +24,614 @@
   },
   "tools": [
     {
-      "name": "search_legal",
-      "description": "WHEN the relevant law is unknown, search Indonesian legal text with validated filters. Canonical workflow: search_legal -> resolve_law/get_law_context -> read_law. Use normal Bahasa Indonesia terms; avoid boolean operator syntax. For LOCAL regulations pass region= (e.g. region='DKI Jakarta', 'Jawa Barat', 'Kota Bekasi'); also filter by regulation_types=, year/year_from/year_to, status= (berlaku/diubah/dicabut/tidak_berlaku), issuing_body=. If a search returns 0 results, read diagnostics.next_steps instead of re-running a similar query.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "query": {
-            "type": "string",
-            "description": "Indonesian legal terms, topic, or citation fragment."
-          },
-          "law_id": {
-            "type": "integer",
-            "description": "Optional canonical law_id for within-law search."
-          },
-          "regulation_types": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Optional regulation type filters, e.g. ['UU', 'PP']."
-          },
-          "year": {
-            "type": "integer",
-            "description": "Exact enactment year filter."
-          },
-          "year_from": {
-            "type": "integer",
-            "description": "Inclusive start year."
-          },
-          "year_to": {
-            "type": "integer",
-            "description": "Inclusive end year."
-          },
-          "status": {
-            "type": "string",
-            "description": "Optional status filter: berlaku, diubah, dicabut, tidak_berlaku."
-          },
-          "issuing_body": {
-            "type": "string",
-            "description": "Optional issuing body or abbreviation, e.g. DPR, Presiden, DKI Jakarta."
-          },
-          "region": {
-            "type": "string",
-            "description": "Optional region hint for regional regulations."
-          },
-          "limit": {
-            "type": "integer",
-            "description": "Maximum results. Default 10; server clamp 1-20.",
-            "default": 10,
-            "minimum": 1,
-            "maximum": 20
-          }
-        },
-        "required": [
-          "query"
-        ]
-      },
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": true
-      }
-    },
-    {
       "name": "resolve_law",
       "description": "WHEN a law is named by citation, title, or shorthand, resolve it to one canonical law_id. Canonical workflow: resolve_law -> get_law_context -> read_law.",
       "inputSchema": {
-        "type": "object",
+        "additionalProperties": false,
         "properties": {
           "reference": {
-            "type": "string",
-            "description": "Citation or title-like reference, e.g. 'UU 27 tahun 2022' or 'UU PDP'."
+            "description": "Citation or title-like reference, e.g. 'UU 27 tahun 2022' or 'UU PDP'.",
+            "type": "string"
           },
           "region": {
-            "type": "string",
-            "description": "Optional region hint, e.g. 'DKI Jakarta'."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional region hint for regional regulations, e.g. 'DKI Jakarta'."
           }
         },
         "required": [
           "reference"
-        ]
+        ],
+        "type": "object"
       },
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
         "idempotentHint": true,
         "openWorldHint": true
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "name": "search_legal",
+      "description": "WHEN the relevant law is unknown, search Indonesian legal text with validated filters. Canonical workflow: search_legal -> resolve_law/get_law_context -> read_law. Use normal Bahasa Indonesia terms; avoid boolean operator syntax. For LOCAL regulations pass region= (e.g. region='DKI Jakarta', 'Jawa Barat', 'Kota Bekasi'); also filter by regulation_types=, year/year_from/year_to, status= (berlaku/diubah/dicabut/tidak_berlaku), issuing_body=. If a search returns 0 results, read diagnostics.next_steps instead of re-running a similar query.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "description": "Indonesian legal search terms or topic. Required.",
+            "type": "string"
+          },
+          "law_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional canonical law_id for within-law search. When set, other filters are not applicable."
+          },
+          "regulation_types": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional list of regulation types, e.g. ['UU', 'PP'] or ['Peraturan Pemerintah']."
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Exact enactment year filter. If also given with year_from/year_to, year takes precedence."
+          },
+          "year_from": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Inclusive start year filter."
+          },
+          "year_to": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Inclusive end year filter."
+          },
+          "status": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional status filters: berlaku, diubah, dicabut, tidak_berlaku."
+          },
+          "issuing_body": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional issuing body filter, e.g. DPR, Presiden, OJK."
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Region/locality filter for LOCAL regulations (Perda/Pergub/Perbup/Perwali) — a province, city, or regency, e.g. 'DKI Jakarta', 'Jawa Barat', 'Kota Bekasi'. Pass this whenever the user names a place for a regional regulation."
+          },
+          "limit": {
+            "default": 10,
+            "description": "Maximum results, clamped to 1-20.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
       }
     },
     {
       "name": "get_law_context",
       "description": "WHEN a law_id is known, get compact status, outline, or relationship context before reading text. Canonical workflow: resolve_law -> get_law_context -> read_law.",
       "inputSchema": {
-        "type": "object",
+        "additionalProperties": false,
         "properties": {
           "law": {
-            "type": [
-              "integer",
-              "string"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
             ],
-            "description": "Canonical law_id or a citation string accepted by resolve_law."
+            "description": "Canonical law_id or citation string accepted by resolve_law, e.g. 16 or 'UU 27 tahun 2022'."
           },
           "detail": {
-            "type": "string",
-            "enum": [
-              "summary",
-              "outline",
-              "relationships"
-            ],
-            "description": "Context detail level. summary is compact; outline helps choose read_law selectors.",
-            "default": "summary"
+            "default": "summary",
+            "description": "One of summary, outline, relationships.",
+            "type": "string"
           }
         },
         "required": [
           "law"
-        ]
+        ],
+        "type": "object"
       },
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
         "idempotentHint": true,
         "openWorldHint": true
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
       }
     },
     {
       "name": "read_law",
       "description": "WHEN a law is known and text is needed, read by forgiving selector strings. Canonical workflow: resolve_law -> get_law_context -> read_law. Invalid selectors return typed invalid_selector errors with recovery guidance.",
       "inputSchema": {
-        "type": "object",
+        "additionalProperties": false,
         "properties": {
           "law": {
-            "type": [
-              "integer",
-              "string"
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
             ],
-            "description": "Canonical law_id or a citation string accepted by resolve_law."
+            "description": "Canonical law_id or citation string accepted by resolve_law."
           },
           "selector": {
-            "type": "string",
-            "description": "Selector string: all, pasal 27, pasal 27-30, pasal 13-16, pasal 27-37, pasal 40-41 (multi-range), bab III, menimbang, mengingat, penjelasan umum, penjelasan pasal 5, lampiran."
+            "description": "Selector string: all, pasal 27, pasal 27-30, pasal 13-16, pasal 27-37, pasal 40-41 (multi-range), bab III, menimbang, mengingat, penjelasan umum, penjelasan pasal 5, lampiran.",
+            "type": "string"
           },
           "max_chars": {
-            "type": "integer",
-            "description": "Maximum aggregate characters. Default 30000; server clamp 1000-100000.",
             "default": 30000,
-            "minimum": 1000,
-            "maximum": 100000
+            "description": "Maximum aggregate characters. Default 30000, minimum 1000, hard cap 100000.",
+            "type": "integer"
           },
           "cursor": {
-            "type": "string",
-            "description": "Opaque cursor from a prior truncated response."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Cursor from a prior truncated response."
           }
         },
         "required": [
           "law",
           "selector"
-        ]
+        ],
+        "type": "object"
       },
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
         "idempotentHint": true,
         "openWorldHint": true
-      }
-    },
-    {
-      "name": "search_court_decisions",
-      "description": "WHEN the user asks about Mahkamah Konstitusi decisions, search PUU/judicial review, SKLN, PHPU, or PHPKADA decisions. Use reviewed_law with any citation/law_id accepted by resolve_law.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "query": {
-            "type": "string",
-            "description": "Optional topic/classification keyword, e.g. 'pemilu' or 'kebebasan berserikat'."
-          },
-          "reviewed_law": {
-            "type": "string",
-            "description": "Law being reviewed, e.g. 'UU 13 tahun 2003', 'UU PDP', or a law_id."
-          },
-          "lane": {
-            "type": "string",
-            "description": "Case lane: puu, skln, phpu, phpkada."
-          },
-          "amar": {
-            "type": "string",
-            "description": "Decision outcome filter, e.g. dikabulkan_sebagian, ditolak, inkonstitusional_bersyarat."
-          },
-          "year": {
-            "type": "integer",
-            "description": "Decision year."
-          },
-          "jenis_pengujian": {
-            "type": "string",
-            "description": "Review type, e.g. materiil or formil."
-          },
-          "has_dissent": {
-            "type": "boolean",
-            "description": "True for decisions with dissenting opinion; false for decisions without dissent."
-          },
-          "judge": {
-            "type": "string",
-            "description": "Constitutional justice name matched through curated aliases."
-          },
-          "limit": {
-            "type": "integer",
-            "description": "Maximum results. Default 20; server clamp 1-50.",
-            "default": 20,
-            "minimum": 1,
-            "maximum": 50
-          }
-        }
       },
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "idempotentHint": true,
-        "openWorldHint": true
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
       }
     },
     {
       "name": "report_issue",
       "description": "WHEN the user finds a real Pasal.id data problem, submit structured feedback. Use search_failure only when a query should have found a known expected law.",
       "inputSchema": {
-        "type": "object",
+        "additionalProperties": false,
         "properties": {
           "report_type": {
-            "type": "string",
-            "enum": [
-              "ocr_correction",
-              "missing_regulation",
-              "missing_pasal",
-              "incorrect_content",
-              "broken_link",
-              "outdated_content",
-              "search_failure",
-              "other"
-            ],
-            "description": "Issue type."
+            "description": "Jenis masalah yang dilaporkan. Salah satu nilai: ocr_correction, missing_regulation, missing_pasal, incorrect_content, broken_link, outdated_content, search_failure, other.",
+            "type": "string"
           },
           "title": {
-            "type": "string",
-            "description": "Optional short Indonesian title; auto-derived when omitted."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Judul pendek dalam Bahasa Indonesia. Opsional — jika kosong, judul diturunkan otomatis dari report_type dan kutipan peraturan/Pasal."
           },
           "description": {
-            "type": "string",
-            "description": "Context; for search_failure this is the failed query."
-          },
-          "expected_citation": {
-            "type": "string",
-            "description": "Expected law citation for search_failure, e.g. 'UU No. 27 Tahun 2022'."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Konteks tambahan. Jelaskan apa yang pengguna harapkan dan langkah yang sudah dicoba."
           },
           "law_id": {
-            "type": "integer",
-            "description": "Pasal.id law_id if known."
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "law_id Pasal.id jika sudah diketahui."
           },
           "law_type": {
-            "type": "string",
-            "description": "Legacy law type, e.g. UU or PP."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Jenis peraturan, misalnya UU atau PP."
           },
           "law_number": {
-            "type": "string",
-            "description": "Legacy law number."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Nomor peraturan."
           },
           "year": {
-            "type": "integer",
-            "description": "Legacy law year."
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Tahun peraturan."
           },
           "pasal_number": {
-            "type": "string",
-            "description": "Article number if relevant."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Nomor Pasal yang bermasalah jika relevan."
           },
           "node_id": {
-            "type": "integer",
-            "description": "node_id for OCR correction."
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "node_id dari section yang bermasalah pada hasil read_law untuk koreksi OCR; jangan menebak ID ayat yang tidak dikembalikan."
           },
           "current_content": {
-            "type": "string",
-            "description": "Current text for OCR correction."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "content_text dari section yang sama dengan node_id pada hasil read_law. Wajib untuk ocr_correction."
           },
           "suggested_content": {
-            "type": "string",
-            "description": "Suggested corrected text for OCR correction."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Teks koreksi yang disarankan. Wajib untuk ocr_correction."
+          },
+          "expected_citation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Kutipan peraturan yang seharusnya muncul untuk report_type=search_failure, misalnya 'UU No. 27 Tahun 2022'."
           },
           "reference_url": {
-            "type": "string",
-            "description": "Supporting official URL, if available."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "URL sumber pendukung, misalnya PDF resmi."
           },
           "contact_email": {
-            "type": "string",
-            "description": "Optional contact email."
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Email kontak opsional jika pengguna ingin dapat dihubungi."
           }
         },
         "required": [
           "report_type"
-        ]
+        ],
+        "type": "object"
       },
       "annotations": {
         "readOnlyHint": false,
         "destructiveHint": false,
         "idempotentHint": false,
         "openWorldHint": true
+      },
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
       }
     },
     {
       "name": "ping",
       "description": "WHEN checking authenticated MCP health, call ping.",
       "inputSchema": {
-        "type": "object",
-        "properties": {}
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
       },
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
         "idempotentHint": true,
         "openWorldHint": true
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      }
+    },
+    {
+      "name": "search_court_decisions",
+      "description": "WHEN the user asks about Mahkamah Konstitusi decisions, search PUU/judicial review, SKLN, PHPU, or PHPKADA decisions. Use reviewed_law with any citation/law_id accepted by resolve_law.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Kata kunci topik/klasifikasi opsional, misalnya 'pemilu' atau 'kebebasan berserikat'."
+          },
+          "reviewed_law": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "UU yang diuji, misalnya 'uu 13 2003' atau 'UU No. 13 Tahun 2003' atau law_id kanonik."
+          },
+          "lane": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Jalur perkara: puu, skln, phpu, phpkada."
+          },
+          "amar": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Amar putusan, misalnya dikabulkan_sebagian, ditolak, inkonstitusional_bersyarat; '__ketetapan__' untuk putusan tanpa amar."
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Tahun putusan."
+          },
+          "jenis_pengujian": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Jenis pengujian, misalnya materiil atau formil."
+          },
+          "has_dissent": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "True untuk hanya putusan dengan dissenting opinion; False untuk tanpa dissent."
+          },
+          "judge": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Nama hakim konstitusi (dicocokkan di ketua/anggota/pemberi dissent). Pencocokan lewat roster hakim MK terkurasi + normalisasi ejaan; nama di luar roster mengembalikan kosong."
+          },
+          "limit": {
+            "default": 20,
+            "description": "Jumlah maksimum hasil (1-50), server clamp ke 50.",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
       }
     }
   ],

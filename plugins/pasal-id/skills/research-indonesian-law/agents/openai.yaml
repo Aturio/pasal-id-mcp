@@ -1,0 +1,11 @@
+interface:
+  display_name: "Research Indonesian legislation"
+  short_description: "Build a memo from provisions actually read"
+  default_prompt: "Use $research-indonesian-law to research Indonesian legislation for my topic with citations and coverage limits."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "pasal-id-plugin"
+      description: "Pasal.id Indonesian legislative research tools"
+      transport: "streamable_http"
+      url: "https://mcp.pasal.id/mcp/openai"

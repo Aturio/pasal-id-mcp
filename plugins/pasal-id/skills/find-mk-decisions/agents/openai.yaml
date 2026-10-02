@@ -1,0 +1,11 @@
+interface:
+  display_name: "Find Constitutional Court cases"
+  short_description: "Discover MK cases with metadata and links"
+  default_prompt: "Use $find-mk-decisions to find MK cases reviewing UU 13 Tahun 2003 with dates, outcomes and links."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "pasal-id-plugin"
+      description: "Pasal.id Indonesian legislative research tools"
+      transport: "streamable_http"
+      url: "https://mcp.pasal.id/mcp/openai"

@@ -1,0 +1,11 @@
+interface:
+  display_name: "Trace status and amendments"
+  short_description: "Compare recorded changes with source text"
+  default_prompt: "Use $check-law-status-and-amendments to trace recorded changes to UU ITE and compare the provisions available."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "pasal-id-plugin"
+      description: "Pasal.id Indonesian legislative research tools"
+      transport: "streamable_http"
+      url: "https://mcp.pasal.id/mcp/openai"

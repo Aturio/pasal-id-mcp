@@ -1,0 +1,20 @@
+{
+  "name": "pasal-id-plugins",
+  "interface": {
+    "displayName": "Pasal.id"
+  },
+  "plugins": [
+    {
+      "name": "pasal-id",
+      "source": {
+        "source": "local",
+        "path": "./plugins/pasal-id"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

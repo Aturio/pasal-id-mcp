@@ -46,6 +46,19 @@ Add this to `.cursor/mcp.json` or `~/.cursor/mcp.json`, then complete OAuth:
 
 For VS Code, Windsurf, ChatGPT, and personal-token examples, use the [client-specific guide](docs/clients.md). Their configuration formats differ.
 
+## ChatGPT and Codex plugin
+
+The [Pasal.id plugin package](plugins/pasal-id/README.md) adds four focused workflows: verify a law citation, research legislation, check recorded status and amendments, and discover MK decisions. Its distinct MCP connection name, `pasal-id-plugin`, connects through browser OAuth to `https://mcp.pasal.id/mcp/openai` and exposes the six research and feedback tools. This lets existing users keep their standalone `pasal-id` connection while the plugin uses its intended endpoint. Verify the installed plugin's actual connection binding; restricted logging applies to `/mcp/openai`, while standalone `/mcp` traffic follows its separate diagnostic policy. The source package is available here; downloadable ZIP versions are published through [GitHub Releases](https://github.com/Aturio/pasal-id-mcp/releases) after their hosted runtime is verified. A source package or personal installation does not establish OpenAI directory approval.
+
+For Codex CLI, register this marketplace and install the plugin:
+
+```bash
+codex plugin marketplace add Aturio/pasal-id-mcp --ref main
+codex plugin add pasal-id@pasal-id-plugins
+```
+
+These commands require the marketplace files to be published on `main`. Follow the [installation guide](docs/plugin-install.md) for browser OAuth, desktop setup, updates and connection checks. In ChatGPT, use **Plugins → Add → Upload plugin archive**, then **New Plugin → click to upload** to select a built or released ZIP. Entering only an MCP endpoint does not import the four workflows. See the [package guide](plugins/pasal-id/README.md) for building and evaluation.
+
 ## Available tools
 
 The live v2 interface provides **six research and feedback tools plus `ping`**. Directories should discover seven tools after authenticating.

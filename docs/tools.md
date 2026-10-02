@@ -4,7 +4,7 @@ The live interface exposes six research/feedback tools plus `ping` (seven tools 
 The public [server card](https://mcp.pasal.id/.well-known/mcp/server-card.json) and
 [checked-in snapshot](../server-card.json) document their input schemas. Authenticated
 MCP `tools/list` is authoritative for the executable contract. Snapshot refreshed
-on September 18, 2026; the runtime reports version 2.0.0.
+on October 3, 2026; the runtime reports version 2.0.0.
 
 Research tools return structured results and diagnostics; `ping` is a small
 liveness response. Data errors are typed (`error_code`, `message`, `recovery.suggestion`,
@@ -24,9 +24,9 @@ WHEN the relevant law is unknown, search Indonesian legal text with validated fi
 | `year` | integer | Exact enactment year filter. |
 | `year_from` | integer | Inclusive start year. |
 | `year_to` | integer | Inclusive end year. |
-| `status` | string | Optional status filter: berlaku, diubah, dicabut, tidak_berlaku. |
-| `issuing_body` | string | Optional issuing body or abbreviation, e.g. DPR, Presiden, DKI Jakarta. |
-| `region` | string | Optional region hint for regional regulations. |
+| `status` | array of strings | Optional status filters: berlaku, diubah, dicabut, tidak_berlaku; for example `["berlaku", "diubah"]`. |
+| `issuing_body` | string | Optional issuing body or abbreviation, e.g. DPR, Presiden or OJK. |
+| `region` | string | Issuing jurisdiction for local regulations, e.g. DKI Jakarta or Kota Bekasi. |
 | `limit` | integer | Maximum results. Default 10; server clamp 1-20. |
 
 Granular search: governor regulations about wastewater in DKI Jakarta.

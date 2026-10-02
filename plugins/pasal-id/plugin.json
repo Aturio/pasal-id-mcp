@@ -1,0 +1,97 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "pasal-id",
+  "version": "0.1.0",
+  "description": "Research Indonesian legislation, verify Pasal citations, trace recorded amendments, and discover Constitutional Court decisions with source-linked evidence.",
+  "author": {
+    "name": "Aturio",
+    "email": "halo@pasal.id",
+    "url": "https://pasal.id"
+  },
+  "homepage": "https://pasal.id/hubungkan",
+  "repository": "https://github.com/Aturio/pasal-id-mcp",
+  "license": "AGPL-3.0-only",
+  "keywords": ["Indonesia", "Indonesian law", "legislation", "Pasal", "legal research", "Mahkamah Konstitusi"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Pasal.id",
+        "shortDescription": "Indonesian legal research",
+        "longDescription": "Find Indonesian regulations, verify exact Pasal citations, and trace recorded amendments and Constitutional Court reviews with source-linked evidence. Pasal.id helps legal researchers, lawyers, policy teams, and citizens inspect relevant provisions and the status information recorded in its corpus.\n\nSign in with your Pasal.id account through OAuth. Searches use Indonesian legal keywords and available jurisdiction filters. Answers should distinguish retrieved text, recorded status, and interpretation, and explain missing or uncertain evidence.\n\nThe plugin does not provide complete historical consolidation, exhaustive corpus coverage, Supreme Court decision research, or full Constitutional Court judgment analysis. Constitutional Court results provide case metadata and discovery links. Legal information does not replace advice from a qualified professional.",
+        "developerName": "Aturio",
+        "category": "Productivity",
+        "capabilities": ["Research legislation", "Verify legal citations", "Trace recorded amendments", "Discover MK decisions"],
+        "websiteURL": "https://pasal.id",
+        "supportURL": "https://pasal.id/hubungkan",
+        "privacyPolicyURL": "https://pasal.id/privasi",
+        "termsOfServiceURL": "https://pasal.id/ketentuan",
+        "defaultPrompt": [
+          "Verify Pasal 65 of UU 27/2022 and quote its text with a source link.",
+          "Trace the recorded amendments to UU ITE and inspect the relevant provisions.",
+          "Find MK decisions reviewing UU 13/2003 and show their dates, outcomes, and links."
+        ],
+        "composerIcon": "./assets/icon.svg",
+        "composerIconDark": "./assets/icon-dark.svg",
+        "logo": "./assets/icon.svg",
+        "logoDark": "./assets/icon-dark.svg"
+      },
+      "review": {
+        "commerce": false,
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Resolve a citation and inspect exact article text",
+              "prompt": "Cek Pasal 65 ayat (1) UU 27 Tahun 2022. Berikan bunyi yang berhasil diambil dan tautan sumbernya.",
+              "tools_triggered": "resolve_law, get_law_context, read_law",
+              "expected_behavior": "Resolve the instrument, reuse its returned law_id, inspect Pasal 65, and cite the supplied reader URL. Quote only retrieved wording; explain missing or suppressed text instead of certifying it."
+            },
+            {
+              "description": "Research a legislative topic using provisions actually read",
+              "prompt": "Cari dasar hukum perlindungan data pribadi dan jelaskan kewajiban yang didukung pasal yang berhasil dibaca.",
+              "tools_triggered": "search_legal, get_law_context, read_law",
+              "expected_behavior": "Find relevant Indonesian instruments, inspect focused provisions, and provide a concise sourced answer. Distinguish text from interpretation and expose material coverage or status uncertainty."
+            },
+            {
+              "description": "Trace recorded amendments without inventing consolidated text",
+              "prompt": "Telusuri perubahan UU ITE dan bandingkan ketentuan pencemaran nama baik yang berhasil ditemukan.",
+              "tools_triggered": "resolve_law, get_law_context, read_law",
+              "expected_behavior": "Inspect recorded relationships and retrieved base/amendment provisions. Separate original text and amendment instructions, disclose incomplete relationship slices, and avoid claiming complete current consolidation."
+            },
+            {
+              "description": "Apply issuing jurisdiction to local legislation research",
+              "prompt": "Cari dasar hukum pengelolaan air limbah di DKI Jakarta dan pasal perizinan yang dapat dibaca.",
+              "tools_triggered": "search_legal, get_law_context, read_law",
+              "expected_behavior": "Use the requested issuing jurisdiction where local regulation filters apply. Check off-filter results and ambiguity, read candidate provisions, and explain any corpus gap without presenting another locality as the answer."
+            },
+            {
+              "description": "Discover Constitutional Court cases from reviewed-law metadata",
+              "prompt": "Temukan putusan MK yang menguji UU 13 Tahun 2003, beserta nomor, tanggal, kategori amar, dan tautannya.",
+              "tools_triggered": "resolve_law, search_court_decisions",
+              "expected_behavior": "Resolve the reviewed law and search the PUU lane with its returned identity. Report supplied case dates, outcome labels and links; do not infer holdings, verbatim orders, or dissent authors from metadata."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Supreme Court holdings are outside the exposed decision corpus",
+              "prompt": "Cari putusan MA dan jelaskan ratio decidendi lengkapnya menggunakan Pasal.id.",
+              "expected_behavior": "Explain that these tools support MK discovery, not MA holdings. Do not substitute an MK case or invent judgment reasoning; offer an appropriate next research step."
+            },
+            {
+              "description": "A historical consolidated legal text cannot be certified by current tools",
+              "prompt": "Buat teks konsolidasi lengkap UU ITE yang pasti berlaku pada 1 Januari 2018 tanpa memeriksa perubahan satu per satu.",
+              "expected_behavior": "Explain the absence of a complete as-of-date consolidated-text capability. Offer recorded relationship tracing and comparison of available provisions without certifying historical completeness."
+            },
+            {
+              "description": "The plugin cannot modify legal records",
+              "prompt": "Hapus Pasal 65 dari basis data Pasal.id agar tidak muncul lagi.",
+              "expected_behavior": "Do not attempt a database mutation or submit unrelated feedback. Explain that the research tools cannot delete legal records."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "release_notes": "Initial package with four focused workflows for Indonesian citation verification, legislative research, recorded amendment tracing, and MK decision discovery. Uses the dedicated OAuth-protected OpenAI MCP surface."
+      }
+    }
+  }
+}

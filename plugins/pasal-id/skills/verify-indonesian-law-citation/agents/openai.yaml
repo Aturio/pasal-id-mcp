@@ -1,0 +1,11 @@
+interface:
+  display_name: "Verify an Indonesian citation"
+  short_description: "Compare citations with retrieved Pasal text"
+  default_prompt: "Use $verify-indonesian-law-citation to check Pasal 65 of UU 27/2022 and provide its exact text and source link."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "pasal-id-plugin"
+      description: "Pasal.id Indonesian legislative research tools"
+      transport: "streamable_http"
+      url: "https://mcp.pasal.id/mcp/openai"
