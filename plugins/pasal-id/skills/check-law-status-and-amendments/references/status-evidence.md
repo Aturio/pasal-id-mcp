@@ -14,4 +14,6 @@ For repeal/status questions, explain the stored status and any uncertainty note 
 
 For historical questions, state the requested cutoff and inspect relevant dates and amendment text available in the tools. If completeness or effective-date evidence is missing, explain that the historical position cannot be certified by this search. Offer a focused evidence map rather than inventing an as-of-date text.
 
-MK review links identify cases to investigate. Their structured outcomes do not by themselves identify every affected provision or the judgment's reasoning.
+Reuse each retrieved context or provision in the evidence map. Follow returned reading cursors when relevant text is truncated. Once both sides of the requested comparison and any material commencement limitation are supported, report the remaining gap instead of expanding into a full corpus audit.
+
+MK review links identify cases to investigate outside this text-reading workflow. Their structured outcomes do not identify every affected provision or the judgment's reasoning; these tools do not expose full MK judgment text.

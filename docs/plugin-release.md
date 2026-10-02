@@ -12,7 +12,7 @@ Plugin package versions are independent of the MCP Registry version in `server.j
 
    ```bash
    uv run build_release.py
-   uv run build_release.py --output /tmp/pasal-id-0.1.0.zip
+   uv run build_release.py --output /tmp/pasal-id-0.1.1.zip
    ```
 
    Match the output filename to the manifest version for later releases. The builder writes the ZIP and adjacent `.zip.sha256` file outside the source folder. Its archive allowlist excludes the builder, schemas and repository configuration. Check the archive member list printed by the builder.
@@ -20,10 +20,10 @@ Plugin package versions are independent of the MCP Registry version in `server.j
 
    ```bash
    cd /tmp
-   shasum -a 256 -c pasal-id-0.1.0.zip.sha256
+   shasum -a 256 -c pasal-id-0.1.1.zip.sha256
    ```
 
-5. Commit and push only the reviewed public package and documentation. Create a GitHub Release from that exact public commit with tag `pasal-id-plugin-v0.1.0`, a matching versioned title, and the ZIP plus its SHA-256 file as assets. Draft the release first, inspect the assets and notes, then publish after the runtime gates pass. Do not attach a private repository archive.
+5. Commit and push only the reviewed public package and documentation. Create a GitHub Release from that exact public commit with tag `pasal-id-plugin-v0.1.1`, a matching versioned title, and the ZIP plus its SHA-256 file as assets. Draft the release first, inspect the assets and notes, then publish after the runtime gates pass. Do not attach a private repository archive.
 
 Release notes should identify the four supported workflows, enduring endpoint, authentication, tested clients and material capability limits. State directory approval only if it has actually been granted. No demo recording or successful host evaluation should be invented.
 

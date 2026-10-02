@@ -6,7 +6,7 @@ The plugin includes four workflows and an OAuth-protected legal-research connect
 
 These commands were checked against Codex CLI 0.156.0. If `codex plugin --help` does not expose them, update your supported client or use its Plugins interface.
 
-After the public marketplace files are published on `main`, run:
+Register the public marketplace and install the plugin:
 
 ```bash
 codex plugin marketplace add Aturio/pasal-id-mcp --ref main

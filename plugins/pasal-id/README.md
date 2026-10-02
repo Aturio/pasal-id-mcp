@@ -21,7 +21,7 @@ From `plugins/pasal-id/` in a source checkout, use the builder's pinned dependen
 
 ```bash
 uv run build_release.py
-uv run build_release.py --output /tmp/pasal-id-0.1.0.zip
+uv run build_release.py --output /tmp/pasal-id-0.1.1.zip
 ```
 
 The source builder declares pinned PEP 723 dependencies. The validator uses vendored Agent Plugins 1.0.0 schemas offline, then checks the OpenAI listing, exact review-case counts, local references, SVG dimensions, dependency consistency, path safety and the allowlisted runtime contents. ZIP members are sorted, uncompressed and have fixed metadata; identical source produces identical bytes and an adjacent SHA-256 file. Maintainers in the implementation repository also run `uv run --project apps/mcp-server pytest apps/mcp-server/test_plugin_package.py -q` from its root to check the package against the server's actual tool signatures.

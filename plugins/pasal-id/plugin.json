@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "pasal-id",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Research Indonesian legislation, verify Pasal citations, trace recorded amendments, and discover Constitutional Court decisions with source-linked evidence.",
   "author": {
     "name": "Aturio",
@@ -90,7 +90,7 @@
         }
       },
       "publication": {
-        "release_notes": "Initial package with four focused workflows for Indonesian citation verification, legislative research, recorded amendment tracing, and MK decision discovery. Uses the dedicated OAuth-protected OpenAI MCP surface."
+        "release_notes": "Four focused workflows for Indonesian citation verification, legislative research, recorded amendment tracing, and MK decision discovery. Refines amendment evidence reuse, focused selectors, cursor continuation, and MK metadata boundaries following production evaluation. Uses the dedicated OAuth-protected OpenAI MCP surface."
       }
     }
   }
