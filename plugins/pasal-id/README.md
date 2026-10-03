@@ -21,7 +21,7 @@ From `plugins/pasal-id/` in a source checkout, use the builder's pinned dependen
 
 ```bash
 uv run build_release.py
-uv run build_release.py --output /tmp/pasal-id-0.1.4.zip
+uv run build_release.py --output /tmp/pasal-id-0.1.5.zip
 ```
 
 The source builder declares pinned PEP 723 dependencies. The validator uses vendored Agent Plugins 1.0.0 schemas offline, then checks the OpenAI listing, exact review-case counts, local references, SVG dimensions, dependency consistency, path safety and the allowlisted runtime contents. ZIP members are sorted, uncompressed and have fixed metadata; identical source produces identical bytes and an adjacent SHA-256 file. Maintainers in the implementation repository also run `uv run --project apps/mcp-server pytest apps/mcp-server/test_plugin_package.py -q` from its root to check the package against the server's actual tool signatures.
@@ -63,3 +63,5 @@ Hosted tools and server implementations remain live while metadata is reviewed. 
 `schemas/plugin-1.0.0.schema.json` and `schemas/mcp-1.0.0.schema.json` were obtained from the [Agent Plugins 1.0.0 plugin schema](https://agent-plugins.org/schemas/1.0.0/plugin.schema.json) and [MCP schema](https://agent-plugins.org/schemas/1.0.0/mcp.schema.json) on October 2, 2026. They validate the portable format, while OpenAI-specific checks follow its current documentation. The published OpenAI documents contain older contradictory `.app.json`, annotation-justification and endpoint-update examples; the current submission page controls this package's release process.
 
 This package preserves the repository's AGPL-3.0 license; see `LICENSE`.
+
+Version 0.1.5 adds the accessible walkthrough URL. The recording shows eight actual dedicated-reviewer Codex CLI cases from version 0.1.4, with host/model provenance, source-quality caveats and the failed supporting search disclosed. This metadata update leaves all skill, reference, MCP, logo and icon files unchanged; it does not establish native ChatGPT testing or directory approval.

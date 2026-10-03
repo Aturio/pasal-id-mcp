@@ -1,6 +1,6 @@
 # Plugin distribution
 
-The plugin is maintained in `plugins/pasal-id/`. It contains the portable manifests, four skills and their supporting templates, existing brand marks, license, README, reproducible builder and vendored validation schemas. `.agents/plugins/marketplace.json` makes the same package discoverable through supported Codex marketplace workflows; [installation](plugin-install.md) includes the actual OAuth setup. Marketplace files stay outside the 18-member plugin ZIP. This public repository contains no hosted service implementation, credentials, user data, evaluation payloads or private fixtures.
+The plugin is maintained in `plugins/pasal-id/`. It contains the portable manifests, four skills and their supporting templates, existing brand marks, license, README, reproducible builder and vendored validation schemas. `.agents/plugins/marketplace.json` makes the same package discoverable through supported Codex marketplace workflows; [installation](plugin-install.md) includes the actual OAuth setup. Marketplace files stay outside the 20-member plugin ZIP. This public repository contains no hosted service implementation, credentials, user data, evaluation payloads or private fixtures.
 
 Plugin package versions are independent of the MCP Registry version in `server.json`. Updating the plugin does not require changing that registry manifest or trigger its publication workflow.
 

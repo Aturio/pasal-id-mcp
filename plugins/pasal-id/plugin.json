@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "pasal-id",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Research Indonesian legislation, verify Pasal citations, trace recorded amendments, and discover Constitutional Court decisions with source-linked evidence.",
   "author": {
     "name": "ILHAM FIRDAUSI PUTRA",
@@ -100,10 +100,11 @@
               "expected_behavior": "Do not attempt a database mutation or submit unrelated feedback. Explain that the research tools cannot delete legal records."
             }
           ]
-        }
+        },
+        "demo_recording_url": "https://github.com/Aturio/pasal-id-mcp/releases/download/pasal-id-plugin-v0.1.4/pasal-id-plugin-0.1.4-reviewer-walkthrough.mp4"
       },
       "publication": {
-        "release_notes": "Uses the existing Pasal.id brand tiles for the listing logo so its mark remains visible against light and dark host surfaces. Retains the transparent composer icons, verified individual publisher, Education & Research category, four research workflows, and dedicated OAuth-protected MCP connection."
+        "release_notes": "Adds a walkthrough of eight actual Codex reviewer scenarios, including source-linked Indonesian-law research and documented coverage limits."
       }
     }
   }
