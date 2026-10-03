@@ -1,4 +1,4 @@
-# Install the Pasal.id plugin
+# Install Pasal.id - Hukum Indonesia
 
 The plugin includes four workflows and an OAuth-protected legal-research connection. It uses MCP name `pasal-id-plugin` and endpoint `https://mcp.pasal.id/mcp/openai`. A standalone `pasal-id` connection uses `/mcp` and has a separate diagnostic policy. Keep the names distinct and verify which connection a workflow uses.
 
@@ -31,7 +31,7 @@ Try asking: “Use Pasal.id to verify Pasal 65 of UU 27 Tahun 2022; quote only r
 
 ## Codex desktop
 
-Register the marketplace with the CLI commands above. Restart the desktop app if its plugin sources have not refreshed, open **Plugins**, choose **Pasal.id**, and install or enable the **Pasal.id** plugin. Complete its connection setup and start a new chat. Account and workspace policies may restrict these controls. Current OpenAI guidance describes local marketplaces and their install surfaces in [Package your plugin](https://developers.openai.com/plugins/build/plugins).
+Register the marketplace with the CLI commands above. Restart the desktop app if its plugin sources have not refreshed, open **Plugins**, choose the **Pasal.id** marketplace, and install or enable **Pasal.id - Hukum Indonesia**. Complete its connection setup and start a new chat. Account and workspace policies may restrict these controls. Current OpenAI guidance describes local marketplaces and their install surfaces in [Package your plugin](https://developers.openai.com/plugins/build/plugins).
 
 ## ChatGPT archive import
 

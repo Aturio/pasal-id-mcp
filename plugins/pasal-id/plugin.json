@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "pasal-id",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Research Indonesian legislation, verify Pasal citations, trace recorded amendments, and discover Constitutional Court decisions with source-linked evidence.",
   "author": {
     "name": "Aturio",
@@ -11,12 +11,12 @@
   "homepage": "https://pasal.id/hubungkan",
   "repository": "https://github.com/Aturio/pasal-id-mcp",
   "license": "AGPL-3.0-only",
-  "keywords": ["Indonesia", "Indonesian law", "legislation", "Pasal", "legal research", "Mahkamah Konstitusi"],
+  "keywords": ["Indonesia", "Hukum Indonesia", "Indonesian law", "legislation", "Pasal", "legal research", "Mahkamah Konstitusi"],
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "Pasal.id",
-        "shortDescription": "Indonesian legal research",
+        "displayName": "Pasal.id - Hukum Indonesia",
+        "shortDescription": "Riset hukum berbasis sumber",
         "longDescription": "Find Indonesian regulations, verify exact Pasal citations, and trace recorded amendments and Constitutional Court reviews with source-linked evidence. Pasal.id helps legal researchers, lawyers, policy teams, and citizens inspect relevant provisions and the status information recorded in its corpus.\n\nSign in with your Pasal.id account through OAuth. Searches use Indonesian legal keywords and available jurisdiction filters. Answers should distinguish retrieved text, recorded status, and interpretation, and explain missing or uncertain evidence.\n\nThe plugin does not provide complete historical consolidation, exhaustive corpus coverage, Supreme Court decision research, or full Constitutional Court judgment analysis. Constitutional Court results provide case metadata and discovery links. Legal information does not replace advice from a qualified professional.",
         "developerName": "Aturio",
         "category": "Productivity",
@@ -90,7 +90,7 @@
         }
       },
       "publication": {
-        "release_notes": "Four focused workflows for Indonesian citation verification, legislative research, recorded amendment tracing, and MK decision discovery. Refines amendment evidence reuse, focused selectors, cursor continuation, and MK metadata boundaries following production evaluation. Uses the dedicated OAuth-protected OpenAI MCP surface."
+        "release_notes": "Updates the listing name to Pasal.id - Hukum Indonesia and subtitle to Riset hukum berbasis sumber, with an Indonesian discovery keyword. Retains the four citation verification, legislative research, recorded amendment tracing, and MK discovery workflows and the dedicated OAuth-protected MCP connection."
       }
     }
   }
