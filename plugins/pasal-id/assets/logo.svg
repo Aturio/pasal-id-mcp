@@ -1,0 +1,6 @@
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="200" height="200" rx="44" fill="#F8F5F0"/>
+<circle id="ring" cx="100" cy="100" r="82" stroke="#1D1A18" stroke-width="7"/>
+  <rect id="stem" x="96.5" y="48" width="7" height="104" fill="#1D1A18"/>
+  <path id="curve" d="M100 68 C118 60 134 68 134 80 C134 92 118 100 100 100 C82 100 66 108 66 120 C66 132 82 140 100 132" stroke="#1D1A18" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

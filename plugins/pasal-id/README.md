@@ -21,7 +21,7 @@ From `plugins/pasal-id/` in a source checkout, use the builder's pinned dependen
 
 ```bash
 uv run build_release.py
-uv run build_release.py --output /tmp/pasal-id-0.1.3.zip
+uv run build_release.py --output /tmp/pasal-id-0.1.4.zip
 ```
 
 The source builder declares pinned PEP 723 dependencies. The validator uses vendored Agent Plugins 1.0.0 schemas offline, then checks the OpenAI listing, exact review-case counts, local references, SVG dimensions, dependency consistency, path safety and the allowlisted runtime contents. ZIP members are sorted, uncompressed and have fixed metadata; identical source produces identical bytes and an adjacent SHA-256 file. Maintainers in the implementation repository also run `uv run --project apps/mcp-server pytest apps/mcp-server/test_plugin_package.py -q` from its root to check the package against the server's actual tool signatures.
@@ -58,7 +58,7 @@ Hosted tools and server implementations remain live while metadata is reviewed. 
 
 ## Asset and schema provenance
 
-`assets/icon.svg` and `assets/icon-dark.svg` are unchanged copies of the repository's existing `logo/icon-primary.svg` and `logo/icon-dark-bg.svg`. Both are square 200-unit marks; the listing reuses them for composer and logo. Brand definitions remain in the repository's `DESIGN.md`.
+`assets/icon.svg` and `assets/icon-dark.svg` are unchanged copies of the repository's existing `logo/icon-primary.svg` and `logo/icon-dark-bg.svg` for the composer. The listing uses `assets/logo.svg` and `assets/logo-dark.svg`, unchanged copies of `logo/logo-brand.svg` and `logo/logo-brand-dark.svg`, so each mark has its own contrasting brand background. All four assets have square 200-unit viewBoxes. Brand definitions remain in the repository's `DESIGN.md`.
 
 `schemas/plugin-1.0.0.schema.json` and `schemas/mcp-1.0.0.schema.json` were obtained from the [Agent Plugins 1.0.0 plugin schema](https://agent-plugins.org/schemas/1.0.0/plugin.schema.json) and [MCP schema](https://agent-plugins.org/schemas/1.0.0/mcp.schema.json) on October 2, 2026. They validate the portable format, while OpenAI-specific checks follow its current documentation. The published OpenAI documents contain older contradictory `.app.json`, annotation-justification and endpoint-update examples; the current submission page controls this package's release process.
 
