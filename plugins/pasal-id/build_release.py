@@ -176,7 +176,7 @@ def validate_package(root: Path, *, submission_ready: bool = False) -> dict:
         ("longDescription", 4000, False), ("developerName", 80, True),
     ):
         text_field(interface.get(field), field, maximum, one_line=single_line)
-    require(interface.get("category") == "Productivity", "Use the intended Productivity listing category")
+    require(interface.get("category") == "Education & Research", "Use the intended Education & Research listing category")
     for field in ("websiteURL", "supportURL", "privacyPolicyURL", "termsOfServiceURL"):
         https_url(interface.get(field), field)
     capabilities = interface.get("capabilities", [])

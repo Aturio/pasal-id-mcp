@@ -1,10 +1,10 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "pasal-id",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Research Indonesian legislation, verify Pasal citations, trace recorded amendments, and discover Constitutional Court decisions with source-linked evidence.",
   "author": {
-    "name": "Aturio",
+    "name": "ILHAM FIRDAUSI PUTRA",
     "email": "halo@pasal.id",
     "url": "https://pasal.id"
   },
@@ -18,8 +18,8 @@
         "displayName": "Pasal.id - Hukum Indonesia",
         "shortDescription": "Riset hukum berbasis sumber",
         "longDescription": "Find Indonesian regulations, verify exact Pasal citations, and trace recorded amendments and Constitutional Court reviews with source-linked evidence. Pasal.id helps legal researchers, lawyers, policy teams, and citizens inspect relevant provisions and the status information recorded in its corpus.\n\nSign in with your Pasal.id account through OAuth. Searches use Indonesian legal keywords and available jurisdiction filters. Answers should distinguish retrieved text, recorded status, and interpretation, and explain missing or uncertain evidence.\n\nThe plugin does not provide complete historical consolidation, exhaustive corpus coverage, Supreme Court decision research, or full Constitutional Court judgment analysis. Constitutional Court results provide case metadata and discovery links. Legal information does not replace advice from a qualified professional.",
-        "developerName": "Aturio",
-        "category": "Productivity",
+        "developerName": "ILHAM FIRDAUSI PUTRA",
+        "category": "Education & Research",
         "capabilities": ["Research legislation", "Verify legal citations", "Trace recorded amendments", "Discover MK decisions"],
         "websiteURL": "https://pasal.id",
         "supportURL": "https://pasal.id/hubungkan",
@@ -90,7 +90,7 @@
         }
       },
       "publication": {
-        "release_notes": "Updates the listing name to Pasal.id - Hukum Indonesia and subtitle to Riset hukum berbasis sumber, with an Indonesian discovery keyword. Retains the four citation verification, legislative research, recorded amendment tracing, and MK discovery workflows and the dedicated OAuth-protected MCP connection."
+        "release_notes": "Aligns the package author and listing developer with the verified individual ILHAM FIRDAUSI PUTRA and changes the listing category to Education & Research. Retains the Pasal.id - Hukum Indonesia name, Riset hukum berbasis sumber subtitle, four research workflows, and dedicated OAuth-protected MCP connection."
       }
     }
   }

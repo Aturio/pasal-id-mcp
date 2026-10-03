@@ -1,6 +1,6 @@
 # Pasal.id - Hukum Indonesia
 
-This package combines Pasal.id's OAuth-protected research MCP with four workflows for Indonesian legislation and Constitutional Court case discovery. The publisher is Aturio. It is source for local testing and a public submission; a ZIP or passing local validator does not establish directory approval.
+This package combines Pasal.id's OAuth-protected research MCP with four workflows for Indonesian legislation and Constitutional Court case discovery. The publisher is ILHAM FIRDAUSI PUTRA. It is source for local testing and a public submission; a ZIP or passing local validator does not establish directory approval.
 
 The plugin's MCP connection is named `pasal-id-plugin`, and the server configuration and each skill target `https://mcp.pasal.id/mcp/openai`. This distinct name prevents a host from selecting an existing standalone `pasal-id` connection to `/mcp` in its place. Verify the endpoint's deployment, OAuth contract and actual connection binding before installation or submission. Existing clients can continue using their established `/mcp` connection. Never paste a PAT, password, or service key into the package or conversation; use the host's browser OAuth flow.
 
@@ -21,7 +21,7 @@ From `plugins/pasal-id/` in a source checkout, use the builder's pinned dependen
 
 ```bash
 uv run build_release.py
-uv run build_release.py --output /tmp/pasal-id-0.1.2.zip
+uv run build_release.py --output /tmp/pasal-id-0.1.3.zip
 ```
 
 The source builder declares pinned PEP 723 dependencies. The validator uses vendored Agent Plugins 1.0.0 schemas offline, then checks the OpenAI listing, exact review-case counts, local references, SVG dimensions, dependency consistency, path safety and the allowlisted runtime contents. ZIP members are sorted, uncompressed and have fixed metadata; identical source produces identical bytes and an adjacent SHA-256 file. Maintainers in the implementation repository also run `uv run --project apps/mcp-server pytest apps/mcp-server/test_plugin_package.py -q` from its root to check the package against the server's actual tool signatures.
@@ -47,7 +47,7 @@ Use the [current submission flow](https://developers.openai.com/plugins/deploy/s
 Before submission:
 
 - Confirm the enduring endpoint, real OAuth flow, and reviewed tool contracts. The selected URL is difficult to change after publication.
-- Verify Aturio's publisher identity and organization permissions in the portal. The directory uses the selected verified identity.
+- Verify ILHAM FIRDAUSI PUTRA's publisher identity and owning organization permissions in the portal, and confirm the draft shows the intended publisher.
 - Serve the exact portal challenge token at the eligible host's `/.well-known/openai-apps-challenge`, without authentication.
 - Confirm accessible [website](https://pasal.id), [support/contact](https://pasal.id/hubungkan), [privacy](https://pasal.id/privasi) and [terms](https://pasal.id/ketentuan), with actual collection/retention matching disclosures. Support email: halo@pasal.id.
 - Run the five positive and three negative cases on supported ChatGPT/Codex surfaces with current legal evidence. Add the real demo recording URL and update release notes/version.
