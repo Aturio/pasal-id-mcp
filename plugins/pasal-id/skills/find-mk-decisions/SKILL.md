@@ -10,7 +10,9 @@ Find MK case metadata for further examination. The tool names below refer to thi
 3. Report the supplied case identity, date, lane, outcome label, reviewed laws and reader link. Use [decision-discovery.md](references/decision-discovery.md) for the output and metadata caveats. Check obviously anomalous dates before presenting them as reliable events.
 4. Explain the limits relevant to the request. An `amar` label is not a verbatim dispositive order. `has_dissent` is a metadata flag, not evidence of author, reasoning or which holding attracted dissent. A review relationship does not establish the legal effect on a specific Pasal.
 
-Do not use legislative `read_law` selectors to invent MK judgment sections. For a request requiring the full judgment, provide the supplied link and explain that further source inspection is necessary; do not claim that metadata establishes the holding. MA research is unsupported by this plugin, so explain that limitation and a useful next step.
+Do not use legislative `read_law` selectors to invent MK judgment sections. For a request requiring the full judgment, provide the supplied link and explain that further source inspection is necessary; do not claim that metadata establishes the holding. For MA or complete judgment-reasoning requests, state the capability limit before asking for a case or topic. MA research is unsupported by this plugin; offer the official MA directory or a user-supplied judgment as a useful next step, without inspecting unrelated workspace files.
+
+For ordinary discovery, report complete returned metadata and links without automatically opening every PDF. A missing/anomalous date or a requested independent source comparison may require a targeted official check. Distinguish that supplementation from dates supplied by MCP.
 
 No results means no matches in this query/corpus, not that no case exists. Separate invalid filters, OAuth expiration, rate limiting and backend errors from an empty successful result. Follow actionable bounded recovery. Do not switch to another court or invent missing text to complete the request.
 
