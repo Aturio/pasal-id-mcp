@@ -39,7 +39,7 @@ Download the plugin ZIP and matching checksum from a [GitHub Release](https://gi
 
 The observed personal import displayed the bundled MCP server and all four skills, then offered **Open in desktop app**. Starting its citation workflow handed off to the ChatGPT desktop launcher; it did not produce a browser answer or establish an OAuth connection. If your host offers that handoff, open the same account in its desktop app, follow its installation or enablement prompts, and complete the Pasal.id browser connection when prompted. These native ChatGPT steps and desktop/mobile workflow execution have not been verified by our Codex tests. Do not treat successful archive import alone as a completed setup.
 
-Import the plugin ZIP, not GitHub's automatic repository source archive. Version 0.1.5 contains 20 archive members, including all four workflows. The package is submitted for OpenAI review and is not published in its public directory. Personal import and repository marketplace distribution do not establish directory approval.
+Import the plugin ZIP, not GitHub's automatic repository source archive. The [0.1.7 beta release](https://github.com/Aturio/pasal-id-mcp/releases/tag/pasal-id-plugin-v0.1.7) includes a [plugin ZIP](https://github.com/Aturio/pasal-id-mcp/releases/download/pasal-id-plugin-v0.1.7/pasal-id-0.1.7.zip) with 20 archive members and all four workflows. The earlier 0.1.5 package remains submitted for OpenAI review; it has not been approved or published in the public directory. Personal import and repository marketplace distribution do not establish directory approval.
 
 ## Get a useful first answer
 
@@ -62,6 +62,8 @@ Check your first result:
 2. Use the citation starter above. A successful answer should identify UU 27/2022 on Pelindungan Data Pribadi, read Pasal 65 and distinguish the retrieved quotation from recorded status and interpretation.
 3. Open the supplied Pasal 65 reader link and compare the quotation with the displayed provision. An answer without retrieved text, or one reporting missing text, a service error or incomplete evidence, has not verified the quotation.
 4. Continue with the other workflow prompts when the first check succeeds. Request explicit limitations where text is damaged or missing, relationships are incomplete, or legal conditions depend on one another. Do not ask the plugin to certify complete historical consolidation or infer an MK holding from case metadata.
+
+If a returned passage is incomplete, ask the assistant to inspect an available PDF archived by Pasal.id and cite its physical page. You need not download the PDF yourself. An unavailable archive or an image-only or unreadable page remains an explicit evidence gap.
 
 All four workflows have actual installed Codex CLI evidence. Those scenarios do not certify general legal accuracy or native ChatGPT compatibility. MK results are metadata and links, not full judgment analysis; MA reasoning is outside this plugin. Research does not automatically submit feedback. `report_issue` is a separate write for a diagnosed issue that you explicitly ask to report. Use general legal terms where possible and avoid confidential matter details; see [Pasal.id privacy](https://pasal.id/privasi).
 
