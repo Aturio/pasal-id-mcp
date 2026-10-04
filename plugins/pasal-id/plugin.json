@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "pasal-id",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Research Indonesian legislation, verify Pasal citations, trace recorded amendments, and discover Constitutional Court decisions with source-linked evidence.",
   "author": {
     "name": "ILHAM FIRDAUSI PUTRA",
@@ -104,7 +104,7 @@
         "demo_recording_url": "https://github.com/Aturio/pasal-id-mcp/releases/download/pasal-id-plugin-v0.1.4/pasal-id-plugin-0.1.4-reviewer-walkthrough.mp4"
       },
       "publication": {
-        "release_notes": "Uses retrieved MCP evidence for ordinary provision requests, adds bounded archived-PDF recovery guidance, and explains unsupported court capabilities before asking for case details."
+        "release_notes": "Improves regional regulation discovery with broader result windows, title-based subject checks, and targeted topic/type refinements, while retaining evidence-first provision reading and bounded archived-PDF recovery."
       }
     }
   }

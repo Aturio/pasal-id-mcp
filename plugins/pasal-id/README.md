@@ -21,7 +21,7 @@ From `plugins/pasal-id/` in a source checkout, use the builder's pinned dependen
 
 ```bash
 uv run build_release.py
-uv run build_release.py --output /tmp/pasal-id-0.1.6.zip
+uv run build_release.py --output /tmp/pasal-id-0.1.7.zip
 ```
 
 The source builder declares pinned PEP 723 dependencies. The validator uses vendored Agent Plugins 1.0.0 schemas offline, then checks the OpenAI listing, exact review-case counts, local references, SVG dimensions, dependency consistency, path safety and the allowlisted runtime contents. ZIP members are sorted, uncompressed and have fixed metadata; identical source produces identical bytes and an adjacent SHA-256 file. Maintainers in the implementation repository also run `uv run --project apps/mcp-server pytest apps/mcp-server/test_plugin_package.py -q` from its root to check the package against the server's actual tool signatures.
@@ -64,6 +64,6 @@ Hosted tools and server implementations remain live while metadata is reviewed. 
 
 This package preserves the repository's AGPL-3.0 license; see `LICENSE`.
 
-Version 0.1.6 finishes ordinary provision requests from sufficient retrieved MCP text and uses bounded archived-PDF selectors for specific extraction gaps. `source find Pasal 65` locates source headings; `source pages 29` reads up to five one-based physical pages. Stored node page positions remain unverified hints, and source extraction does not establish complete consolidation or current legal force. Unsupported MA/full-judgment capabilities are explained before case clarification. This package requires its compatible hosted MCP deployment and a new package review; the active 0.1.5 submission remains separate.
+Version 0.1.7 improves regional regulation discovery by inspecting broader result windows, checking candidate titles against the question's subject, and refining the topic and regulation type before drawing conclusions from incidental hits. It retains version 0.1.6's evidence-first provision reading and bounded archived-PDF recovery for specific extraction gaps. `source find Pasal 65` locates source headings; `source pages 29` reads up to five one-based physical pages. Stored node page positions remain unverified hints, and source extraction does not establish complete consolidation or current legal force. Unsupported MA/full-judgment capabilities are explained before case clarification. This package requires its compatible hosted MCP deployment and a new package review; the active 0.1.5 submission remains separate.
 
 The accessible walkthrough remains the eight actual dedicated-reviewer Codex CLI cases recorded with version 0.1.4. Its host/model provenance, source-quality caveats and failed supporting search are disclosed. It does not demonstrate the new source selectors or establish directory approval.
