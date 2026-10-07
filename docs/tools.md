@@ -93,6 +93,15 @@ WHEN a law is known and text is needed, read by forgiving selector strings. Cano
 | `selector` | string | **required** — Selector string: all, pasal 27, pasal 27-30, comma-separated ranges, bab III, menimbang, mengingat, penjelasan umum, penjelasan pasal 5, lampiran. |
 | `max_chars` | integer | Maximum aggregate characters. Default 30000; server clamp 1000-100000. |
 | `cursor` | string | Opaque cursor from a prior truncated response. |
+| `versi` | string | `asli` (default) = the indexed original text; `terkini` = unofficial consolidation, only when `law.consolidation.available`. Any other value returns `invalid_versi`; `terkini` without a published version returns `consolidation_unavailable`. |
+
+Outputs: `law.consolidation` `{available, version_no, as_of_date, through, unmodeled[], pending_total, url, note}` (also on `get_law_context`); `law.amendment_notice` on `asli` reads of an amended law (quote it); per-section `provenance` on `terkini` reads.
+
+Read the current (consolidated) text when one is published.
+
+```json
+{"law": "UUD 1945", "selector": "pasal 3", "versi": "terkini"}
+```
 
 Read a pasal range.
 

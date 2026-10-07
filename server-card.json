@@ -2,7 +2,7 @@
   "serverInfo": {
     "name": "Pasal.id - Hukum Indonesia",
     "title": "Pasal.id - Hukum Indonesia",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "websiteUrl": "https://pasal.id",
     "icons": [
       {
@@ -15,7 +15,7 @@
     ],
     "description": "Akses MCP terautentikasi ke peraturan perundang-undangan Indonesia dengan data terstruktur, sitasi yang dapat diperiksa, dan tautan sumber resmi. Cari 100.000+ peraturan, ambil teks Pasal yang tepat, dan verifikasi status perubahan atau pencabutan sebelum mengutip."
   },
-  "instructions": "Cari, baca, dan analisis peraturan perundang-undangan Indonesia. Pasal.id membantu jawaban AI tetap membumi pada teks Pasal, status peraturan, dan sumber yang dapat diperiksa. Cakupan mencakup ketenagakerjaan, perkawinan, pidana, antikorupsi, perseroan, konsumen, data pribadi, dan bidang lain yang tersedia di korpus Pasal.id.\n\nHIERARKI PERATURAN (otoritas tertinggi ke terendah):\nUUD/UUDS (Undang-Undang Dasar) -> TAP_MPR (Ketetapan MPR) -> UU/PERPPU/UUDRT (Undang-Undang) -> PP (Peraturan Pemerintah) -> PERPRES/KEPPRES/INPRES/PENPRES (Presiden) -> PERMEN/PERMENKUMHAM/PERMENKUM (Menteri) -> PERBAN (Lembaga) -> PERDA/PERDA_PROV/PERDA_KAB (Daerah) -> KEPMEN (Keputusan Menteri) -> SE (Surat Edaran; belum tersedia di korpus)\n\nROUTING TOOL V2:\n- Jika peraturan sudah bernama atau tersirat: `resolve_law -> get_law_context -> read_law`.\n- Jika peraturan belum diketahui: gunakan `search_legal`, pilih `law_id`, lalu lanjutkan ke `get_law_context` atau `read_law`.\n- Gunakan `get_law_context(detail='summary')` untuk status dan ringkasan; `detail='outline'` untuk selector; `detail='relationships'` untuk perubahan/MK.\n- Gunakan `read_law` dengan selector sederhana seperti `pasal 27`, `pasal 27-30`, `pasal 13-16, pasal 40-41` (multi-range), `bab III`, `menimbang`, `lampiran`, atau `all`.\n- Gunakan `search_court_decisions` hanya untuk putusan Mahkamah Konstitusi; `reviewed_law` menerima citation/law_id yang sama dengan `resolve_law`.\n- Gunakan `report_issue` hanya untuk masalah data nyata; report_type `search_failure` bisa menambahkan kasus regresi pencarian jika expected law jelas.\n\nANTI-PATTERN:\n- Jangan memakai boolean operator seperti AND/OR/NOT dalam query; tulis istilah hukum Bahasa Indonesia biasa.\n- Jangan parse ulang display string jika respons sebelumnya sudah memberi `law_id`; teruskan `law_id` apa adanya.\n- Jangan membaca seluruh peraturan jika yang dibutuhkan hanya Pasal/BAB tertentu; mulai dari outline dan selector.\n- Jangan melaporkan setiap hasil kosong sebagai bug; longgarkan filter atau coba sinonim dulu.\n\nJALUR PEMULIHAN DATA:\n- Jangan mengirim laporan otomatis untuk setiap pencarian kosong. Coba variasi kata kunci lebih dulu.\n- Gunakan `report_issue` hanya jika pengguna memang menemukan masalah data: OCR salah, peraturan tidak ada, Pasal hilang, tautan rusak, konten tampak usang, atau pencarian gagal menemukan peraturan yang jelas ada.\n- Untuk koreksi OCR, kirim `node_id`, `current_content`, dan `suggested_content` dari hasil pembacaan yang relevan.\n\nFORMAT SITASI: Selalu kutip sebagai 'Pasal X UU No. Y Tahun Z'\nContoh: 'Pasal 81 UU No. 13 Tahun 2003 tentang Ketenagakerjaan'\n\nTIPS PENCARIAN:\n- Gunakan Bahasa Indonesia untuk hasil terbaik, misalnya 'upah minimum' bukan 'minimum wage'\n- Gunakan istilah hukum yang spesifik, misalnya 'pemutusan hubungan kerja' bukan 'dipecat dari pekerjaan'\n- Prefer `law_id` dari respons sebelumnya untuk semua panggilan lanjutan\n- Setiap hasil menyertakan URL pembaca Pasal.id. Pakai `url` pada hasil search_legal (atau law_url/pasal_url pada tool lain) jika pengguna perlu membuka sumber di Pasal.id\n- Basis data memiliki cakupan terbatas. Jika tidak ada hasil, itu tidak berarti peraturannya tidak ada",
+  "instructions": "Cari, baca, dan analisis peraturan perundang-undangan Indonesia. Pasal.id membantu jawaban AI tetap membumi pada teks Pasal, status peraturan, dan sumber yang dapat diperiksa. Cakupan mencakup ketenagakerjaan, perkawinan, pidana, antikorupsi, perseroan, konsumen, data pribadi, dan bidang lain yang tersedia di korpus Pasal.id.\n\nHIERARKI PERATURAN (otoritas tertinggi ke terendah):\nUUD/UUDS (Undang-Undang Dasar) -> TAP_MPR (Ketetapan MPR) -> UU/PERPPU/UUDRT (Undang-Undang) -> PP (Peraturan Pemerintah) -> PERPRES/KEPPRES/INPRES/PENPRES (Presiden) -> PERMEN/PERMENKUMHAM/PERMENKUM (Menteri) -> PERBAN (Lembaga) -> PERDA/PERDA_PROV/PERDA_KAB (Daerah) -> KEPMEN (Keputusan Menteri) -> SE (Surat Edaran; belum tersedia di korpus)\n\nROUTING TOOL V2:\n- Jika peraturan sudah bernama atau tersirat: `resolve_law -> get_law_context -> read_law`.\n- Jika peraturan belum diketahui: gunakan `search_legal`, pilih `law_id`, lalu lanjutkan ke `get_law_context` atau `read_law`.\n- Gunakan `get_law_context(detail='summary')` untuk status dan ringkasan; `detail='outline'` untuk selector; `detail='relationships'` untuk perubahan/MK.\n- Gunakan `read_law` dengan selector sederhana seperti `pasal 27`, `pasal 27-30`, `pasal 13-16, pasal 40-41` (multi-range), `bab III`, `menimbang`, `lampiran`, atau `all`.\n- Untuk celah teks hasil parsing, gunakan arsip PDF melalui `read_law`: `source find Pasal 65` mencari heading dan mengembalikan teks halaman; `source pages 29` membaca halaman fisik tambahan bila diperlukan (maksimal 5 halaman). Hint halaman pada node belum terverifikasi; gunakan hasil pencarian PDF untuk lokasi sebenarnya.\n- Teks MCP yang cukup untuk permintaan biasa tidak memerlukan pencarian web otomatis. Gunakan sumber eksternal untuk celah bukti tertentu, pemeriksaan kemutakhiran yang belum didukung, atau perbandingan sumber yang diminta pengguna.\n- Gunakan `search_court_decisions` hanya untuk putusan Mahkamah Konstitusi; `reviewed_law` menerima citation/law_id yang sama dengan `resolve_law`.\n- Blok `source` (resolve_law, get_law_context, read_law, search_court_decisions) memuat tautan resmi, PDF, updated_at, dan verified. Jika mengutip teks dengan source.verified=false, sebutkan bahwa teks itu belum terverifikasi terhadap sumber resmi.\n- Gunakan `report_issue` hanya untuk masalah data nyata; report_type `search_failure` bisa menambahkan kasus regresi pencarian jika expected law jelas.\n\nANTI-PATTERN:\n- Jangan memakai boolean operator seperti AND/OR/NOT dalam query; tulis istilah hukum Bahasa Indonesia biasa.\n- Jangan parse ulang display string jika respons sebelumnya sudah memberi `law_id`; teruskan `law_id` apa adanya.\n- Jangan membaca seluruh peraturan jika yang dibutuhkan hanya Pasal/BAB tertentu; mulai dari outline dan selector.\n- Jangan melaporkan setiap hasil kosong sebagai bug; longgarkan filter atau coba sinonim dulu.\n\nJALUR PEMULIHAN DATA:\n- Jangan mengirim laporan otomatis untuk setiap pencarian kosong. Coba variasi kata kunci lebih dulu.\n- Gunakan `report_issue` hanya jika pengguna memang menemukan masalah data: OCR salah, peraturan tidak ada, Pasal hilang, tautan rusak, konten tampak usang, atau pencarian gagal menemukan peraturan yang jelas ada.\n- Untuk koreksi OCR, kirim `node_id`, `current_content`, dan `suggested_content` dari hasil pembacaan yang relevan.\n\nFORMAT SITASI: Selalu kutip sebagai 'Pasal X UU No. Y Tahun Z'\nContoh: 'Pasal 81 UU No. 13 Tahun 2003 tentang Ketenagakerjaan'\n\nTIPS PENCARIAN:\n- Gunakan Bahasa Indonesia untuk hasil terbaik, misalnya 'upah minimum' bukan 'minimum wage'\n- Gunakan istilah hukum yang spesifik, misalnya 'pemutusan hubungan kerja' bukan 'dipecat dari pekerjaan'\n- Prefer `law_id` dari respons sebelumnya untuk semua panggilan lanjutan\n- Setiap hasil menyertakan URL pembaca Pasal.id. Pakai `url` pada hasil search_legal (atau law_url/pasal_url pada tool lain) jika pengguna perlu membuka sumber di Pasal.id\n- Basis data memiliki cakupan terbatas. Jika tidak ada hasil, itu tidak berarti peraturannya tidak ada",
   "authentication": {
     "required": true,
     "schemes": [
@@ -25,7 +25,7 @@
   "tools": [
     {
       "name": "resolve_law",
-      "description": "WHEN a law is named by citation, title, or shorthand, resolve it to one canonical law_id. Canonical workflow: resolve_law -> get_law_context -> read_law.",
+      "description": "WHEN a law is named by citation, title, or shorthand, resolve it to one canonical law_id. Canonical workflow: resolve_law -> get_law_context -> read_law. law.source has the official link; if source.verified is false, say quoted text is unverified.",
       "inputSchema": {
         "additionalProperties": false,
         "properties": {
@@ -198,7 +198,7 @@
     },
     {
       "name": "get_law_context",
-      "description": "WHEN a law_id is known, get compact status, outline, or relationship context before reading text. Canonical workflow: resolve_law -> get_law_context -> read_law.",
+      "description": "WHEN a law_id is known, get compact status, outline, or relationship context before reading text. Canonical workflow: resolve_law -> get_law_context -> read_law. law.source has the official link; if source.verified is false, say quoted text is unverified. law.consolidation reports whether a consolidated (versi terkini) text is published.",
       "inputSchema": {
         "additionalProperties": false,
         "properties": {
@@ -237,7 +237,7 @@
     },
     {
       "name": "read_law",
-      "description": "WHEN a law is known and text is needed, read by forgiving selector strings. Canonical workflow: resolve_law -> get_law_context -> read_law. Invalid selectors return typed invalid_selector errors with recovery guidance.",
+      "description": "WHEN a law is known and text is needed, read by forgiving selector strings. Canonical workflow: resolve_law -> get_law_context -> read_law. Invalid selectors return typed invalid_selector errors with recovery guidance. law.source has the official link; if source.verified is false, say quoted text is unverified. law.consolidation says whether a consolidated version exists; pass versi='terkini' to read it, and quote law.amendment_notice when reading the original of an amended law.",
       "inputSchema": {
         "additionalProperties": false,
         "properties": {
@@ -253,7 +253,7 @@
             "description": "Canonical law_id or citation string accepted by resolve_law."
           },
           "selector": {
-            "description": "Selector string: all, pasal 27, pasal 27-30, pasal 13-16, pasal 27-37, pasal 40-41 (multi-range), bab III, menimbang, mengingat, penjelasan umum, penjelasan pasal 5, lampiran.",
+            "description": "Selector string: all, pasal 27, pasal 27-30, pasal 13-16, pasal 27-37, pasal 40-41 (multi-range), bab III, menimbang, mengingat, penjelasan umum, penjelasan pasal 5, lampiran; source find Pasal 65, source find penjelasan Pasal 65, source pages 29 (1-based physical PDF pages, at most 5).",
             "type": "string"
           },
           "max_chars": {
@@ -272,6 +272,11 @@
             ],
             "default": null,
             "description": "Cursor from a prior truncated response."
+          },
+          "versi": {
+            "default": "asli",
+            "description": "asli (default) = naskah asli yang diindeks; terkini = versi konsolidasi tidak resmi, hanya jika law.consolidation.available.",
+            "type": "string"
           }
         },
         "required": [
@@ -503,7 +508,7 @@
     },
     {
       "name": "search_court_decisions",
-      "description": "WHEN the user asks about Mahkamah Konstitusi decisions, search PUU/judicial review, SKLN, PHPU, or PHPKADA decisions. Use reviewed_law with any citation/law_id accepted by resolve_law.",
+      "description": "WHEN the user asks about Mahkamah Konstitusi decisions, search PUU/judicial review, SKLN, PHPU, or PHPKADA decisions. Use reviewed_law with any citation/law_id accepted by resolve_law. source_url is the official mkri.id link; if source.verified is false, say once that the decision text is unverified.",
       "inputSchema": {
         "additionalProperties": false,
         "properties": {
